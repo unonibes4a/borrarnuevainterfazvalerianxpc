@@ -431,6 +431,7 @@ game.load.image('fondo', 'fondo.jpg');
 
 var texture;
 var fondosp;
+var sptextminombre="Giovanni Rodriguez Diaz";
 
 function create() {
 
@@ -475,6 +476,13 @@ var texture; elforarrayhexa(arraysphexa,0,0,sclegame,'vidrio');
 console.log(arraysphexa[0].id);
 //arraysphexa[1].sprite.setTexture(texture, false)
 
+
+sptextminombre= game.add.text(vw*0.05, vh*0.9, "vicite: https://giovannird.itch.io/valerianx", { font: "10px Arial", fill: "#33C7FF", align: "center" });
+sptextminombre.anchor.setTo(0.0, 0.0);
+
+
+sptextvalerian= game.add.text(vw*0.5, vh*0.2, "VALERIANX", { font: "17px Arial", fill: "#33C7FF", align: "center" });
+sptextvalerian.anchor.setTo(0.5, 0.5);
 }
 
 function drawShape(fill, style) {
