@@ -464,7 +464,8 @@ function creapanelvideosdelatemp(idname,idtitle,idimgurl){
 
 setTimeout(function(){
 
-  cambiapeliscula("https://www.facebook.com/MIprimerpag-104661431038214/?modal=admin_todo_tour")
+  cambiapeliscula("https://unonubes3a.wixsite.com/website");
+  
 },14000);
 
 https://www.facebook.com/Ctermodinamica-1282370398566788/?modal=admin_todo_tour
