@@ -421,6 +421,8 @@ function preload() {
 
 game.load.image('vidrio', 'vidrio2.png');
 game.load.shader('bacteria', 'bacteria.frag');
+game.load.image('fondo', 'fondo.jpg');
+
 
 
 }
@@ -428,12 +430,13 @@ game.load.shader('bacteria', 'bacteria.frag');
 
 
 var texture;
-
+var fondosp;
 
 function create() {
 
   arraysphexa=[];
 game.stage.backgroundColor = '#000000';
+fondosp= game.add.sprite(0, 0, 'fondo');
 
 existelefiler=false;
 try {
@@ -445,7 +448,7 @@ if(filter)
 }
 
 
-texture= filter.addToWorld(0, 0, vw, vh);
+
 graphics = game.add.graphics(vw*0.35, vh*0.27);
 
 drawShape(0x000000, 0xa21d7e);
