@@ -789,6 +789,8 @@ nuevogame();
 function oklistophas(){
  game = new Phaser.Game(vw, vh, Phaser.AUTO, 'phaser-example', {update:update,preload: preload, create: create });
 
+
+ setTimeout(function(){onresizemio();},2000);
 }
 
 
