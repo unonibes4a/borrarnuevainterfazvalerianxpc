@@ -316,6 +316,7 @@ function cualtemporada(thiss){
 if(arraytengolastemporadasseries[i].idname==stestatemporadaen){
  // console.log(arraytengolastemporadasseries[i]);
   arraytengoestatemporada.push(arraytengolastemporadasseries[i]);
+  console.log(stestatemporadaen+"  "+arraytengolastemporadasseries[i].idname);
   break;
 }
  
@@ -332,6 +333,7 @@ var intconteovideos=0;
 var arraytengolosvideosseries=[];
 
 function elforparacrearvideosdetempora(){
+  arraytengolosvideosseries=[];
   intconteovideos=0;
   empityelementosid("#idverdaderopeliculas");
   for(var i=0;i<400; i=i+1 ){
@@ -416,7 +418,7 @@ function abrirvideodeserie(){
       puedovervideoserie=true;
 stdireecciondelvideo=arraytengolosvideosseries[i].pg;
 
-stdireecciondelvideo=arraysonestastemporadas[0]["temporada"]["v"+String(intcomteodevideos+1)].pg;
+//stdireecciondelvideo=arraysonestastemporadas[0]["temporada"]["v"+String(intcomteodevideos+1)].pg;
 console.log(esteelevideoqueveodeseri);
 console.log("stdireecciondelvideo     "+stdireecciondelvideo);
       break;
