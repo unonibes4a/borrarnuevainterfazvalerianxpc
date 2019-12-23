@@ -1,86 +1,53 @@
-/*
- * Original shader from: https://www.shadertoy.com/view/ttjGDK
- */
-
 #ifdef GL_ES
 precision mediump float;
 #endif
 
-// glslsandbox uniforms
 uniform float time;
+uniform vec2 mouse;
 uniform vec2 resolution;
 
-// shadertoy emulation
-#define iTime time
-#define iResolution resolution
-
-// --------[ Original ShaderToy begins here ]---------- //
-precision highp float;
-
-mat2 rot(float a) {
-    float c = cos(a), s = sin(a);
-    return mat2(c,s,-s,c);
+float sigmoid(float x) {
+	return 2./(1. + exp2(-x)) - 1.;
 }
 
-float box(vec3 p, vec3 b) {
-    vec3 d = abs(p) - b;
-    return length(max(d, 0.0));
-}
 
-float ifsBox(vec3 p) {
-    for(int i=0; i<6; i++) {
-        p = abs(p) - 1.0;
-        p.xz *= rot(0.7);
-        p.xy *= rot(0.8);
-    }
-    return box(p, vec3(0.0, 0.9, 0.2));
-}
+void main( void ) {
+	vec2 position = gl_FragCoord.xy;
+	vec2 aspect = vec2(1.,resolution.y/resolution.x );
+	position -= 0.5*resolution;
+	vec2 position2 = 0.5 + (position-0.25)/resolution*2.*aspect;
+	float filter = sigmoid(pow(2.3,71.5)*(length((position + 0.5)*aspect) - 0.015))*0.5 +0.5;
+	position -= (-0.5)*resolution;
+	position = mix(position, position2, filter) - 0.5;
+	
+	
+	vec3 light_color = vec3(1.2,0.8,0.6);
+	
+	float t = time*2.0;
+//	vec2 position = ( gl_FragCoord.xy -  resolution.xy*.5 ) / resolution.x;
 
-float map(vec3 p) {
-    float c = 8.0;
-	p.z = mod(p.z, c) - c * 0.5;
-    return ifsBox(p);
-}
+	// 256 angle steps
+	float angle = atan(position.y,position.x)/(2.*3.14159265359);
+	angle -= floor(angle);
+	float rad = length(position);
+	
+	float color = 0.0;
+	for (int i = 0; i < 11; i++) {
+		float angleFract = fract(angle*256.);
+		float angleRnd = floor(angle*25.)+1.;
+		float angleRnd1 = fract(angleRnd*fract(angleRnd*.7235)*4.1);
+		float angleRnd2 = fract(angleRnd*fract(angleRnd*.82657)*13.724);
+		float t = t+angleRnd1*130.;
+		float radDist = sqrt(angleRnd2+float(i));
+		
+		float adist = radDist/rad*.1;
+		float dist = (t*.1+adist);
+		dist = abs(fract(dist)-.5);
+		color +=  (1.0 / (dist))*cos(0.7*(sin(t)))*adist/radDist/30.0;
 
-vec3 hsv(float h, float s, float v) {
-	return ((clamp(abs(fract(h+vec3(0,2,1)/3.)*6.-3.)-1.,0.,1.)-1.)*s+1.)*v;
-}
-
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
-{
-    vec2 p = (fragCoord.xy * 2.0 - iResolution.xy) / iResolution.y;
-
-    vec3 cPos = vec3(2.5*sin(0.4*iTime), 0.5*cos(1.3*iTime), -20.0*iTime);
-    vec3 cDir = vec3(0.0, 0.0, -1.0);
-    vec3 cUp  = vec3(0.0, 1.0, 0.0);
-    vec3 cSide = cross(cDir, cUp);
-
-    vec3 ray = normalize(cSide * p.x + cUp * p.y + cDir);
-
-    // Phantom Mode https://www.shadertoy.com/view/MtScWW by aiekick
-    float t = 0.0;
-    float acc = 0.5;
-    for (int i = 0; i < 199; i++){
-        vec3 pos = cPos + ray * t;
-        float dist = map(pos);
-
-    	dist = max(abs(dist), 0.02);
-        float a = exp(-dist*3.0);
-        if (mod(pos.z-60.0*iTime, 50.0) < 8.0) {
-            a *= 5.0;
-        }
-    	acc += a;
-
-    	t += dist*0.5;
-        if (t > 100.0) break;
-    }
-
-    vec3 col = hsv(fract(0.06*iTime), 0.6, acc * 0.01);
-    fragColor = vec4(col, 1.0);
-}
-// --------[ Original ShaderToy ends here ]---------- //
-
-void main(void)
-{
-    mainImage(gl_FragColor, gl_FragCoord.xy);
+		angle = fract(angle+1.61);
+	}
+	
+	
+	gl_FragColor = vec4(color,color*0.5,color,1.0)*vec4(light_color,1.0);
 }
