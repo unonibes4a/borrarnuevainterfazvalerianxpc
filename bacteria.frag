@@ -1,92 +1,86 @@
+/*
+ * Original shader from: https://www.shadertoy.com/view/ttjGDK
+ */
+
 #ifdef GL_ES
-precision highp float;
+precision mediump float;
 #endif
 
-
+// glslsandbox uniforms
 uniform float time;
-uniform vec2 mouse;
 uniform vec2 resolution;
 
-float sphere(vec3 p)
-{
-	return length(p)-5.;
+// shadertoy emulation
+#define iTime time
+#define iResolution resolution
+
+// --------[ Original ShaderToy begins here ]---------- //
+precision highp float;
+
+mat2 rot(float a) {
+    float c = cos(a), s = sin(a);
+    return mat2(c,s,-s,c);
 }
 
-float displacement(vec3 p)
-{
-	return sin(p.x) + sin(p.y) + sin(p.z);
+float box(vec3 p, vec3 b) {
+    vec3 d = abs(p) - b;
+    return length(max(d, 0.0));
 }
 
-float opDisplace( vec3 p )
-{
-	float d1 = sphere(p);
-	vec3 s = p+time;
-	// mercury ftw
-    	float d2 = displacement(s);
-	d2 += displacement(vec3(d2 * 3.0)) * 0.5;
-	d2 += displacement(vec3(d2 * 5.0)) * 0.1;
-
-	
-    	return max(d1,-(d2/6.0));
+float ifsBox(vec3 p) {
+    for(int i=0; i<6; i++) {
+        p = abs(p) - 1.0;
+        p.xz *= rot(0.7);
+        p.xy *= rot(0.8);
+    }
+    return box(p, vec3(0.0, 0.9, 0.2));
 }
 
-void main( void ) {
+float map(vec3 p) {
+    float c = 8.0;
+	p.z = mod(p.z, c) - c * 0.5;
+    return ifsBox(p);
+}
 
-	vec2 p = -1. + 2.*gl_FragCoord.xy / resolution.xy;
-	p.x *= resolution.x/resolution.y;
-	
-	//Camera animation
-  vec3 vuv=vec3(0,1,0);//Change camere up vector here
-  vec3 vrp=vec3(0,1,0); //Change camere view here
-  vec3 prp=vec3(sin(time*0.2)*8.0,4,cos(time*0.2)*8.0); //Change camera path position here
+vec3 hsv(float h, float s, float v) {
+	return ((clamp(abs(fract(h+vec3(0,2,1)/3.)*6.-3.)-1.,0.,1.)-1.)*s+1.)*v;
+}
 
-  //Camera setup
-  vec3 vpn=normalize(vrp-prp);
-  vec3 u=normalize(cross(vuv,vpn));
-  vec3 v=cross(vpn,u);
-  vec3 vcv=(prp+vpn);
-  vec3 scrCoord=vcv+p.x*u+p.y*v;
-  vec3 scp=normalize(scrCoord-prp);
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 p = (fragCoord.xy * 2.0 - iResolution.xy) / iResolution.y;
 
-  //Raymarching
-  const vec3 e=vec3(0.1,0,0);
-  const float maxd=16.0; //Max depth
+    vec3 cPos = vec3(2.5*sin(0.4*iTime), 0.5*cos(1.3*iTime), -20.0*iTime);
+    vec3 cDir = vec3(0.0, 0.0, -1.0);
+    vec3 cUp  = vec3(0.0, 1.0, 0.0);
+    vec3 cSide = cross(cDir, cUp);
 
-  float s=0.1;
-  vec3 c,p1,n;
+    vec3 ray = normalize(cSide * p.x + cUp * p.y + cDir);
 
-  float f=1.0;
-  for(int i=0;i<16;i++){
-   // if (abs(s)<.01||f>maxd) break;//eliminating break so I can try out w/ core image.-gtoledo
-    f+=s;
-    p1=prp+scp*f;
-    s=opDisplace(p1);
-  }
-  	
-	//replacing if/else with ternary to try out with apple's "core image"-gtoledo
-	c=vec3(.3,0.5,0.8);
-    	n=normalize(
-      	vec3(s-opDisplace(p1-e.xyy),
-           s-opDisplace(p1-e.yxy),
-           s-opDisplace(p1-e.yyx)));
-    	float b=dot(n,normalize(prp-p1));
-    	vec4 tex=vec4((b*c+pow(b,8.0))*(1.0-f*.01),1.0);
-	vec4 background=vec4(0,0,0,1);
-	
-	vec4 Color=(f<maxd)?tex:background;
-	
-  	/*if (f<maxd){
-      	c=vec3(.3,0.5,0.8);
-    	n=normalize(
-      	vec3(s-opDisplace(p1-e.xyy),
-           s-opDisplace(p1-e.yxy),
-           s-opDisplace(p1-e.yyx)));
-    	float b=dot(n,normalize(prp-p1));
-   	gl_FragColor=vec4((b*c+pow(b,8.0))*(1.0-f*.01),1.0);
-  	}
-  	else gl_FragColor=vec4(0,0,0,1);
-	*/
-//to use with core image, just replace with "return Color" - gt
-gl_FragColor=Color;
+    // Phantom Mode https://www.shadertoy.com/view/MtScWW by aiekick
+    float t = 0.0;
+    float acc = 0.5;
+    for (int i = 0; i < 199; i++){
+        vec3 pos = cPos + ray * t;
+        float dist = map(pos);
 
+    	dist = max(abs(dist), 0.02);
+        float a = exp(-dist*3.0);
+        if (mod(pos.z-60.0*iTime, 50.0) < 8.0) {
+            a *= 5.0;
+        }
+    	acc += a;
+
+    	t += dist*0.5;
+        if (t > 100.0) break;
+    }
+
+    vec3 col = hsv(fract(0.06*iTime), 0.6, acc * 0.01);
+    fragColor = vec4(col, 1.0);
+}
+// --------[ Original ShaderToy ends here ]---------- //
+
+void main(void)
+{
+    mainImage(gl_FragColor, gl_FragCoord.xy);
 }
