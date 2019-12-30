@@ -464,7 +464,7 @@ function creapanelvideosdelatemp(idname,idtitle,idimgurl){
 
 setTimeout(function(){
 
-  cambiapeliscula("https://unonubes3a.wixsite.com/website");
+ // cambiapeliscula("https://unonubes3a.wixsite.com/website");
   
 },14000);
 
@@ -617,7 +617,7 @@ try {
 
 
 
-graphics = game.add.graphics(vw*22.35, vh*0.27);
+graphics = game.add.graphics(vw*0.36, vh*0.27);
 
 drawShape(0x000000, 0xa21d7e);
 
@@ -644,11 +644,11 @@ console.log(arraysphexa[0].id);
 //arraysphexa[1].sprite.setTexture(texture, false)
 
 
-sptextminombre= game.add.text(vw*22.05, vh*0.9, "vicite: https://giovannird.itch.io/valerianx", { font: "10px Arial", fill: "#33C7FF", align: "center" });
+sptextminombre= game.add.text(vw*0.05, vh*0.9, "vicite: https://giovannird.itch.io/valerianx", { font: "10px Arial", fill: "#33C7FF", align: "center" });
 sptextminombre.anchor.setTo(0.0, 0.0);
 
 
-sptextvalerian= game.add.text(vw*22.5, vh*0.2, "VALERIANX", { font: "17px Arial", fill: "#33C7FF", align: "center" });
+sptextvalerian= game.add.text(vw*0.5, vh*0.2, "VALERIANX", { font: "17px Arial", fill: "#33C7FF", align: "center" });
 sptextvalerian.anchor.setTo(0.5, 0.5);
 }
 
@@ -727,7 +727,7 @@ elaarray[i].sprite.anchor.x=0.5;
 elaarray[i].sprite.anchor.y=0.5;
 }*/
 
-arraysphexa.push({id:1,sprite:creahexagonosprite(px+vw*2.1,py+vh*0.18,ps,pimg)});
+arraysphexa.push({id:1,sprite:creahexagonosprite(px+vw*0.1,py+vh*0.18,ps,pimg)});
 arraysphexa[0].sprite.anchor.x=0.5;
 arraysphexa[0].sprite.anchor.y=0.5;
 arraysphexa[0].sprite.inputEnabled=true;
@@ -738,7 +738,7 @@ textpeliculas.anchor.setTo(0.5, 0.5);
 textpeliculas.x=arraysphexa[0].sprite.x;
 textpeliculas.y=arraysphexa[0].sprite.y;
 
-arraysphexa.push({id:1,sprite:creahexagonosprite(px+vw*2.16,py+vh*0.46,ps,pimg)});
+arraysphexa.push({id:1,sprite:creahexagonosprite(px+vw*0.16,py+vh*0.46,ps,pimg)});
 arraysphexa[1].sprite.anchor.x=0.5;
 arraysphexa[1].sprite.anchor.y=0.5;
 arraysphexa[1].sprite.inputEnabled=true;
@@ -752,7 +752,7 @@ textseries.anchor.setTo(0.5, 0.5);
 textseries.x=arraysphexa[1].sprite.x;
 textseries.y=arraysphexa[1].sprite.y;
 
-arraysphexa.push({id:1,sprite:creahexagonosprite(px+vw*2.1,py+vh*0.71,ps,pimg)});
+arraysphexa.push({id:1,sprite:creahexagonosprite(px+vw*0.1,py+vh*0.71,ps,pimg)});
 arraysphexa[2].sprite.anchor.x=0.5;
 arraysphexa[2].sprite.anchor.y=0.5;
 arraysphexa[2].sprite.inputEnabled=true;
