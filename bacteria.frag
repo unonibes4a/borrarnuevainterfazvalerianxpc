@@ -1,49 +1,125 @@
-//----from http://glslsandbox.com/e#56769.0
-//----Removed mouse-dependency, asymetrical from start
-//----
+/*
+ * Original shader from: https://www.shadertoy.com/view/XtcfDM
+ */
 
 #ifdef GL_ES
 precision mediump float;
 #endif
 
+
+#define COL_RED .0
+#define COL_GRN .0
+#define COL_BLU 1.0
+
+// glslsandbox uniforms
 uniform float time;
-uniform vec2 mouse;
 uniform vec2 resolution;
 
-// a raymarching experiment by kabuto
+// shadertoy globals
+float iTime = 0.0;
+vec3  iResolution = vec3(0.0);
 
-#define R_FACTOR .0
-#define G_FACTOR 0.
-#define B_FACTOR 5.
-
-const int MAXITER = 42;
-
-vec3 field(vec3 p) {
-	p *= .1;
-	float f = .1;
-	for (int i = 0; i < 5; i++) {
-		p = p.yzx*mat3(.8,.6,0,-.6,.8,0,0,0,1);
-		p += vec3(.123,.456,.789)*float(i);
-		p = abs(fract(p)-.5);
-		p *= 2.0;
-		f *= 2.0;
-	}
-	p *= p;
-	return sqrt(p+p.yzx)/f-.002;
+// --------[ Original ShaderToy begins here ]---------- //
+float N21(vec2 p) {
+	p = fract(p * vec2(2.15, 8.3));
+    p += dot(p, p + 2.5);
+    return fract(p.x * p.y);
 }
 
-void main( void ) {
-	vec3 dir = normalize(vec3((gl_FragCoord.xy-resolution*.5)/resolution.x,1.));
-	vec3 pos = vec3(.4, .5,time);
-	vec3 color = vec3(0);
-	for (int i = 0; i < MAXITER; i++) {
-		vec3 f2 = field(pos);
-		float f = min(min(f2.x,f2.y),f2.z);
-		
-		pos += dir*f;
-		color += float(MAXITER-i)/(f2+.001);
-	}
-	vec3 color3 = vec3(1.-1./(1.+color*(.09/float(MAXITER*MAXITER))));
-	color3 *= color3;
-	gl_FragColor = vec4(color3.r*R_FACTOR, color3.g*G_FACTOR, color3.b*B_FACTOR,1.);
+vec2 N22(vec2 p) {
+	float n = N21(p);
+    return vec2(n, N21(p + n));
+}
+
+vec2 getPos(vec2 id, vec2 offset) {
+	vec2 n = N22(id + offset);
+    float x = cos(iTime * n.x);
+    float y = sin(iTime * n.y);
+    return vec2(x, y) * 0.4 + offset;
+}
+
+float distanceToLine(vec2 p, vec2 a, vec2 b) {
+	vec2 pa = p - a;
+    vec2 ba = b - a;
+    float t = clamp(dot(pa, ba) / dot(ba, ba), 0., 1.);
+    return length(pa - t * ba);
+}
+
+float getLine(vec2 p, vec2 a, vec2 b) {
+	float distance = distanceToLine(p, a, b);
+    float dx = 15./iResolution.y;
+    return smoothstep(dx, 0., distance) * smoothstep(1.2, 0.3, length(a - b));
+}
+
+float layer(vec2 st) {
+    float m = 0.;
+    vec2 gv = fract(st) - 0.5;
+    vec2 id = floor(st);
+    // m = gv.x > 0.48 || gv.y > 0.48 ? 1. : 0.;
+    vec2 pointPos = getPos(id, vec2(0., 0.));
+    m += smoothstep(0.05, 0.03, length(gv - pointPos));
+    
+    float dx=15./iResolution.y;
+    // m += smoothstep(-dx,0., abs(gv.x)-.5);
+    // m += smoothstep(-dx,0., abs(gv.y)-.5);
+    // m += smoothstep(dx, 0., length(gv - pointPos)-0.03);
+    
+    vec2 p[9];
+    p[0] = getPos(id, vec2(-1., -1.));
+    p[1] = getPos(id, vec2(-1.,  0.));
+    p[2] = getPos(id, vec2(-1.,  1.));
+    p[3] = getPos(id, vec2( 0., -1.));
+    p[4] = getPos(id, vec2( 0.,  0.));
+    p[5] = getPos(id, vec2( 0.,  1.));
+    p[6] = getPos(id, vec2( 1., -1.));
+    p[7] = getPos(id, vec2( 1.,  0.));
+    p[8] = getPos(id, vec2( 1.,  1.));
+    
+    for (int j = 0; j <=8 ; j++) {
+    	m += getLine(gv, p[4], p[j]);
+        vec2 temp = (gv - p[j]) * 100.;
+        m += 1./dot(temp, temp) * (sin(10. * iTime + fract(p[j].x) * 20.) * 0.5 + 0.5);
+        
+    }
+    
+    m += getLine(gv, p[1], p[3]);
+    m += getLine(gv, p[1], p[5]);
+    m += getLine(gv, p[3], p[7]);
+    m += getLine(gv, p[5], p[7]);
+    
+    // m += smoothstep(0.05, 0.04, length(st - vec2(0., 0.)));
+    return m;
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 uv = (fragCoord - 0.5 * iResolution.xy) / iResolution.y;
+    
+    float m = 0.;
+    
+    float theta = iTime * 0.1;
+    mat2 rot = mat2(cos(theta), -sin(theta), sin(theta), cos(theta));
+    vec2 gradient = uv;
+    uv = rot * uv;
+    
+    for (float i = 0.; i < 1.0 ; i += 0.25) {
+    	float depth = fract(i + iTime * 0.1);
+        m += layer(uv * mix(10., 0.5, depth) + i * 20.) * smoothstep(0., 0.2, depth) * smoothstep(1., 0.8, depth);
+    }
+    
+    //vec3 baseColor = sin(vec3(3.45, 6.56, 8.78) * iTime * 0.2) * 0.5 + 0.5;
+    vec3 baseColor = sin(vec3(1.0, 1.0, 1.0) * iTime * 0.2) * 0.5 + 1.;
+    
+    vec3 col = (m - gradient.y) * baseColor;
+    // Output to screen
+    fragColor = vec4(col.r*COL_RED,col.g*COL_GRN,col.b*COL_BLU, 1.0);
+}
+// --------[ Original ShaderToy ends here ]---------- //
+
+void main(void)
+{
+    iTime = time;
+    iResolution = vec3(resolution, 0.0);
+
+    mainImage(gl_FragColor, gl_FragCoord.xy);
 }
