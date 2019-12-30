@@ -419,8 +419,7 @@ function abrirvideodeserie(){
 stdireecciondelvideo=arraytengolosvideosseries[i].pg;
 
 //stdireecciondelvideo=arraysonestastemporadas[0]["temporada"]["v"+String(intcomteodevideos+1)].pg;
-console.log(esteelevideoqueveodeseri);
-console.log("stdireecciondelvideo     "+stdireecciondelvideo);
+
       break;
     }
   }
@@ -461,12 +460,6 @@ function creapanelvideosdelatemp(idname,idtitle,idimgurl){
 
 
 
-
-setTimeout(function(){
-
- // cambiapeliscula("https://unonubes3a.wixsite.com/website");
-  
-},14000);
 
 https://www.facebook.com/Ctermodinamica-1282370398566788/?modal=admin_todo_tour
 function cambiapeliscula(stsrc){  // iframe le pasa la pelicula o el video elibro juego lo que sea
@@ -640,7 +633,7 @@ test.input.draggable=true;*/
 
 //var sphexpelis2=  creahexagonosprite(300, 100, 0.15,'vidrio');
 var texture; elforarrayhexa(arraysphexa,0,0,sclegame,'vidrio');
-console.log(arraysphexa[0].id);
+
 //arraysphexa[1].sprite.setTexture(texture, false)
 
 
@@ -650,6 +643,15 @@ sptextminombre.anchor.setTo(0.0, 0.0);
 
 sptextvalerian= game.add.text(vw*0.5, vh*0.2, "VALERIANX", { font: "17px Arial", fill: "#33C7FF", align: "center" });
 sptextvalerian.anchor.setTo(0.5, 0.5);
+
+setTimeout(function () {
+
+  game.paused=true;
+  setTimeout(function () {
+
+   // game.paused=false;
+    },7000);
+  },7000);
 }
 
 function drawShape(fill, style) {
