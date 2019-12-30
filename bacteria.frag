@@ -1,83 +1,58 @@
-// Lightning
-// By: Brandon Fogerty
-// bfogerty at gmail dot com
-// xdpixel.com
-
-
-
-// By: Brandon Fogerty
-// bfogerty at gmail dot com
-// xdpixel.com
-
-
-// EVEN MORE MODS BY 27
-
+/*
+ * Original shader from: https://www.shadertoy.com/view/wsKXRK
+ */
 
 #ifdef GL_ES
-precision lowp float;
+precision mediump float;
 #endif
 
-
-// EVEN MORE MODS BY 27
-
-
-
+// glslsandbox uniforms
 uniform float time;
 uniform vec2 resolution;
 
+// shadertoy emulation
+#define iTime time
+#define iResolution resolution
+const vec4 iMouse = vec4(0.);
 
-const float count = 10.0;
-const float speed = 2.7;
+// --------[ Original ShaderToy begins here ]---------- //
+// V-Drop - Del 19/11/2019 - (Tunnel mix - Enjoy)
+// vertical version: https://www.shadertoy.com/view/tdGXWm
+#define PI 3.14159
 
-
-float Hash( vec2 p, in float s)
+float vDrop(vec2 uv,float t)
 {
-    vec3 p2 = vec3(p.xy,27.0 * abs(sin(s)));
-    return fract(sin(dot(p2,vec3(27.1,61.7, 12.4)))*273758.5453123);
+    uv.x = uv.x*1.0;						// H-Count
+    float dx = fract(uv.x);
+    uv.x = floor(uv.x);
+    uv.y *= 0.05;							// stretch
+    float o=sin(uv.x*215.4);				// offset
+    float s=cos(uv.x*485.99)*.3 +.7;			// speed
+    float trail = mix(95.0,35.0,s);			// trail length
+    float yv = fract(uv.y + t*s + o) * trail;
+    yv = 1.0/yv;
+    yv = smoothstep(0.0,1.0,yv*yv);
+    yv = sin(yv*PI)*(s*5.0);
+    float d2 = sin(dx*PI);
+    return yv*(d2*d2);
 }
 
-
-float noise(in vec2 p, in float s)
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {
-    vec2 i = floor(p);
-    vec2 f = fract(p);
-    f *= f * (3.0-2.0*f);
-    
-    
-    return mix(mix(Hash(i + vec2(0.,0.), s), Hash(i + vec2(1.,0.), s),f.x),
-               mix(Hash(i + vec2(0.,1.), s), Hash(i + vec2(1.,1.), s),f.x),
-               f.y) * s;
+    vec2 p = (fragCoord.xy - 0.5 * iResolution.xy) / iResolution.y;
+    float d = length(p)+0.1;
+	p = vec2(atan(p.x, p.y) / PI, 2.5 / d);
+    if (iMouse.z>0.5)
+    	p.y *= 0.5;
+    float t =  iTime*0.4;
+    vec3 col = vec3(1.55,0.65,.225) * vDrop(p,t);	// red
+    col += vec3(0.55,0.75,1.225) * vDrop(p,t+0.33);	// red
+    col += vec3(0.45,1.15,0.425) * vDrop(p,t+0.66);	// red
+	fragColor = vec4(col*(d*d), 1.0);
 }
+// --------[ Original ShaderToy ends here ]---------- //
 
-
-float fbm(vec2 p)
+void main(void)
 {
-    float v = - noise(p * 02., 0.25);
-    v += noise(p * 01.1, 0.5) - noise(p * 01.1, 0.25);
-    v += noise(p * 02.1, 0.25) - noise(p * 02.1, 0.125);
-    v += noise(p * 04.1, 0.125) - noise(p * 08.1, 0.0625);
-    v += noise(p * 08.1, 0.0625) - noise(p * 16., 0.03125);
-    v += noise(p * 16.1, 0.03125);
-    return v;
-}
-
-
-void main( void )
-{
-    float worktime = time * speed + 100000.0;
-    
-    vec2 uv = ( gl_FragCoord.xy / resolution.xy ) * 2.0 - 1.0;
-    uv.x *= resolution.x/resolution.y;
-    
-    
-    vec3 finalColor = vec3( 0.0, 0.0, 0.0 );
-    for( float i = 1.0; i <= count; i++ )
-    {
-        float t = abs(1.0 / ((uv.x + fbm( uv + worktime / i )) * (i * 100.0)));
-        finalColor +=  t * vec3( i * 0.075, 0.5, 2.0 );
-    }
-    
-    gl_FragColor = vec4( finalColor, 1.0 );
-    
-    
+    mainImage(gl_FragColor, gl_FragCoord.xy);
 }
