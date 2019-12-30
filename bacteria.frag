@@ -28,7 +28,7 @@ void main( void ) {
     vec2 p = ( gl_FragCoord.xy * 2. - resolution.xy ) / min(resolution.x, resolution.y);
 
 
-    vec3 cameraPos = vec3(0., 0.,  time);
+    vec3 cameraPos = vec3(0., 0.,  time/16.0);
     float screenZ = 2.5;
     vec3 rayDirection = normalize(vec3(p, screenZ));
 
@@ -40,7 +40,7 @@ void main( void ) {
         float dist = sceneDist(rayPos);
 
         if (dist < 0.0001) {
-            col = vec3(.0, 0.8, 0.7) * (1.0 - float(i) / 100.0);
+            col = vec3(.0047, 0.3839,0.756) * (1.0 - float(i) / 12.0);
             break;
         }
 
