@@ -1,58 +1,51 @@
-/*
- * Original shader from: https://www.shadertoy.com/view/wsKXRK
- */
-
 #ifdef GL_ES
 precision mediump float;
 #endif
 
-// glslsandbox uniforms
+#extension GL_OES_standard_derivatives : enable
+
 uniform float time;
+uniform vec2 mouse;
 uniform vec2 resolution;
 
-// shadertoy emulation
-#define iTime time
-#define iResolution resolution
-const vec4 iMouse = vec4(0.);
-
-// --------[ Original ShaderToy begins here ]---------- //
-// V-Drop - Del 19/11/2019 - (Tunnel mix - Enjoy)
-// vertical version: https://www.shadertoy.com/view/tdGXWm
-#define PI 3.14159
-
-float vDrop(vec2 uv,float t)
-{
-    uv.x = uv.x*1.0;						// H-Count
-    float dx = fract(uv.x);
-    uv.x = floor(uv.x);
-    uv.y *= 0.05;							// stretch
-    float o=sin(uv.x*215.4);				// offset
-    float s=cos(uv.x*485.99)*.3 +.7;			// speed
-    float trail = mix(95.0,35.0,s);			// trail length
-    float yv = fract(uv.y + t*s + o) * trail;
-    yv = 1.0/yv;
-    yv = smoothstep(0.0,1.0,yv*yv);
-    yv = sin(yv*PI)*(s*5.0);
-    float d2 = sin(dx*PI);
-    return yv*(d2*d2);
+vec2 onRep(vec2 p, float interval) {
+    return mod(p, interval) - interval * 0.5;
 }
 
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
-{
-    vec2 p = (fragCoord.xy - 0.5 * iResolution.xy) / iResolution.y;
-    float d = length(p)+0.1;
-	p = vec2(atan(p.x, p.y) / PI, 2.5 / d);
-    if (iMouse.z>0.5)
-    	p.y *= 0.5;
-    float t =  iTime*0.4;
-    vec3 col = vec3(1.55,0.65,.225) * vDrop(p,t);	// red
-    col += vec3(0.55,0.75,1.225) * vDrop(p,t+0.33);	// red
-    col += vec3(0.45,1.15,0.425) * vDrop(p,t+0.66);	// red
-	fragColor = vec4(col*(d*d), 1.0);
+float barDist(vec2 p, float interval, float width) {
+    return length(max(abs(onRep(p, interval)) - width, 0.0));
 }
-// --------[ Original ShaderToy ends here ]---------- //
 
-void main(void)
-{
-    mainImage(gl_FragColor, gl_FragCoord.xy);
+float sceneDist(vec3 p) {
+    float bar_x = barDist(p.yz, 0.5, 0.01);
+    float bar_y = barDist(p.xz, 0.5, 0.01);
+    float bar_z = barDist(p.xy, 0.5, 0.01);
+
+    return min(min(bar_x, bar_y), bar_z);
+}
+
+void main( void ) {
+    vec2 p = ( gl_FragCoord.xy * 2. - resolution.xy ) / min(resolution.x, resolution.y);
+
+
+    vec3 cameraPos = vec3(0., 0.,  time);
+    float screenZ = 2.5;
+    vec3 rayDirection = normalize(vec3(p, screenZ));
+
+    float depth = 0.0;
+    vec3 col = vec3(0.0);
+
+    for (int i = 0; i < 99; i++) {
+        vec3 rayPos = cameraPos + rayDirection * depth;
+        float dist = sceneDist(rayPos);
+
+        if (dist < 0.0001) {
+            col = vec3(.0, 0.8, 0.7) * (1.0 - float(i) / 100.0);
+            break;
+        }
+
+        depth += dist;
+    }
+
+    gl_FragColor = vec4(col, 1.0);
 }
