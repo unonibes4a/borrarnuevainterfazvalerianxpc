@@ -1,42 +1,33 @@
-// Tiled tunnel
-// Peter Capener
-
+//DS 4 u
 #ifdef GL_ES
-precision mediump float;
+precision highp float;
 #endif
-#extension GL_OES_standard_derivatives : enable
 
 uniform float time;
-uniform vec2 mouse;
 uniform vec2 resolution;
 
-vec3 xy_to_rgb( vec2 xy ) {
-
-	vec3 rgb = vec3( 0.0, 0.0, 0.0 );
-	float ratio = 1.;
-	float slope = abs( xy.x / xy.y );
-	if ( slope < ratio ) {
-		float tile = floor( cos( 1./xy.y * 3.0 + ( time * 3. * abs(xy.y)/xy.y ) ) + 1. ) - slope/ratio;
-		rgb = vec3( tile, tile, tile );
-	} else {
-		float tile = 1. - floor( cos( 1./xy.x * ratio * 3.0 + ( time * 3. * abs(xy.x)/xy.x ) ) + 1. ) - (1./slope)*3.;
-		rgb = vec3( tile, tile, tile );
+void main()
+{
+	vec2 uv = (gl_FragCoord.xy * 2.0 - resolution) / min(resolution.x, resolution.y);
+	vec2 f = vec2(5.0);
+	vec3 c = vec3(0.1,0.5,0.1);
+	float light = 0.1;
+	
+	for (float x = 0.0; x < 5.0; x += 1.0)
+	{
+		
+		f = vec2(sin(sin(time + uv.x * x) - uv.y * dot(vec2(x + uv.y), vec2(sin(uv.y*x), cos(x)))));
+		f*=length(uv);
+		light += (0.04 / distance(uv, f)) - (0.01 * distance(vec2((sin(time + uv.y))), vec2(uv)));
+		c.y = sin(time + x*x) * 0.1 + 0.5;
 	}
-	float dist = max(1.-length(xy * vec2( 2., 5.0 )),0.);
-	rgb -= vec3( dist, dist, dist ) / 1.2;
-	return rgb;
-}
-
-void main( void ) {
-
-	float scale  = min(resolution.x, resolution.y);
-	float width  = resolution.x / scale;
-	float height = resolution.y / scale;
-	vec2 coord = ( gl_FragCoord.xy / scale ) - vec2( width*.5, height*.5 ) + (mouse - vec2(.5, .5)) * 1.;
 	
-	vec3 color = xy_to_rgb( coord );
-	color *= vec3(0.6, 0.2, 0.2);
+	c *= light;
 	
-	gl_FragColor = vec4( color, 1. );
-
+	c.x *= 0.6;
+	c.y *= 0.6;
+	c.z *= 6.1;
+	
+	
+	gl_FragColor = vec4(c, 1.0);
 }
