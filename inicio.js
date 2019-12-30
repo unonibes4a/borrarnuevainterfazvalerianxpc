@@ -27,15 +27,15 @@ $(document).ready(function(){
     $("#myInputpeli").on("keyup", function() {
       /*   valuebusca = $("#myInputpeli").val().toLowerCase();
 
-         console.log(this.id);
+       
         $("#idverdaderopeliculas a").filter(function() {
             $(this).toggle($(this).text().toLowerCase().indexOf(valuebusca) > -1);
             //var scrollElm = docume.scrollingElement;
-            console.log(this.id);
+         
            // document.getElementById("idverdaderopeliculas").scrollingElement.scrollTop = 0;
 //scrollElm.scrollTop = 0;
         
-//console.log("valuebusca    "+valuebusca);
+
     
 
 
@@ -91,13 +91,14 @@ var varid=0;
 var stringpelis="";
 function crealaspeliculasenpanel(idname,idtitle,idimgurl){
     stringpelis="";
-    //idimgurl='peli.jpg';
-    //console.log(idname+" "+idtitle+" "+idimgurl);
+
+    
     stringpelis=  "<div  class='column'><a id='"+ String(idname)+"'" +"  onclick='cualpeliculaespora(this)'>"+
     "<div class='card'>  <h3 class='pelih3'>"+idtitle+"<br></h3> <img  class='climgrwo' src='"+idimgurl+"'  "+"alt=''>"+
       "<p>valerianx</p>    </div>"+"</a>  </div>";
 
-  //    console.log(stringpelis);
+
+      
     $("#idverdaderopeliculas").append(stringpelis);
 
 
@@ -132,15 +133,15 @@ arrarypeliculas2019[i].title,arrarypeliculas2019[i].img);
  
  
  for(var i in arrarypeliculas2019){
-   //  console.log(arrarypeliculas2019[i].idname);
+
      if(arrarypeliculas2019[i].idname==estapelicula.id){
-       //  game.destroy();
+
  
          esverdadjuego=false;
 
 
          cambiapeliscula(arrarypeliculas2019[i].pg);
-       //  alert(estapelicula.id+"  "+ arrarypeliculas2019[i].pg);
+     
      }
  }
    }
@@ -171,12 +172,12 @@ arrarypeliculas2019[i].title,arrarypeliculas2019[i].img);
  function crealasseriesenpanel(idname,idtitle,idimgurl){
   stringpelis="";
   //idimgurl='peli.jpg';
-  //console.log(idname+" "+idtitle+" "+idimgurl);
+
   stringpelis=  "<div  class='column'><a id='"+ String(idname)+"'" +"  onclick='cualserie(this)'>"+
   "<div class='card'>  <h3 class='pelih3'>"+idtitle+"<br></h3> <img  class='climgrwo' src='"+idimgurl+"'  "+"alt=''>"+
     "<p>valerianx</p>    </div>"+"</a>  </div>";
 
-//    console.log(stringpelis);
+
   $("#idverdaderopeliculas").append(stringpelis);
 
 
@@ -209,12 +210,11 @@ function cualserie(thiss){
     
     if(arraryseries2019[i].idname==stestaserie){
       stimgparavideodetemop=arraryseries2019[i].pg;
-      //console.log(arraryseries2019[i].idname+"   "+stestaserie);
+
 //if(arraryseries2019[i].t){}
 arrayestaseriees=arraryseries2019[i];
 
-//console.log(arrayestaseriees);
-//console.log(arraryseries2019[i]["t"+String(idxtemporadas+1)]);
+
 break;
 
 
@@ -271,7 +271,7 @@ function festoyenestatemporada(arraypasada){
   arraytengolastemporadasseries=[];
 for(var i in arraypasada){
 
- //console.log(arraypasada[i]["temporada"]);
+
  arraytengolastemporadasseries.push(arraypasada[i]["temporada"]);
 }
 
@@ -314,9 +314,9 @@ function cualtemporada(thiss){
  
   for(var i in arraytengolastemporadasseries ){
 if(arraytengolastemporadasseries[i].idname==stestatemporadaen){
- // console.log(arraytengolastemporadasseries[i]);
+
   arraytengoestatemporada.push(arraytengolastemporadasseries[i]);
-  console.log(stestatemporadaen+"  "+arraytengolastemporadasseries[i].idname);
+
   break;
 }
  
@@ -396,7 +396,7 @@ function cualvideodelaserie(thiss){
 
   
 
-//console.log(thiss);
+
 
 abrirvideodeserie();
 
@@ -552,7 +552,7 @@ function fcbtcerrarpanelpeliculas(){
 var vw=window.innerWidth*1;
 var vh=window.innerHeight;
 
-//console.log("div  "+vh+"  "+vw+ "  " +vw/vh);
+
 //div  238  517  2.172268907563025 0.15
 //div  654  1366  2.08868501529052
 
@@ -797,7 +797,7 @@ function onresizemio(){
 vw=window.innerWidth*1;
 vh=window.innerHeight;
 //  sclegame= 0.5227722772277228
-//console.log("yoo  "+ (vh/vw));
+
 //nuevogame();
 detenerphaserudate();
 reanudarphaserudate();
@@ -863,7 +863,7 @@ function reanudarphaserudate(){
     
   }
   $("#phaser-example").empty();
-  alert("crea nuevo juego");
+ 
   nuevogame();
 
 }
