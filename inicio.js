@@ -464,7 +464,7 @@ function creapanelvideosdelatemp(idname,idtitle,idimgurl){
 
 setTimeout(function(){
 
-  cambiapeliscula("https://unonubes3a.wixsite.com/website");
+ // cambiapeliscula("https://unonubes3a.wixsite.com/website");
   
 },14000);
 
@@ -590,7 +590,7 @@ game.load.image('vidrio', 'vidrio2.png');
 game.load.shader('bacteria', 'bacteria.frag');
 game.load.image('fondo', 'fondo.jpg');
 
-
+game.load.image('metal', 'metal.png');
 
 }
   
@@ -600,6 +600,94 @@ var texture;
 var fondosp;
 var sptextminombre="Giovanni Rodriguez Diaz";
 
+var filter2;
+var spriteconfilter;
+var existelefiler=false;
+
+function createelfiltro(){
+
+   //  Shader by GhettoWolf (https://www.shadertoy.com/view/Xdl3WH)
+
+   var fragmentSrc = [
+    "#ifdef GL_ES",
+    "precision mediump float;",
+    "#endif",
+    
+    "uniform float time;",
+    "uniform vec2 mouse;",
+    "uniform vec2 resolution;",
+    
+    "float sigmoid(float x) {",
+    "return 2./(1. + exp2(-x)) - 1.;",
+    "}",
+    
+    
+    "void main( void ) {",
+        "vec2 position = gl_FragCoord.xy;",
+        "vec2 aspect = vec2(1.,resolution.y/resolution.x );",
+        "position -= 0.5*resolution;",
+        "vec2 position2 = 0.5 + (position-0.25)/resolution*2.*aspect;",
+        "float filter = sigmoid(pow(2.3,71.5)*(length((position + 0.5)*aspect) - 0.015))*0.5 +0.5;",
+        "position -= (-0.5)*resolution;",
+        "position = mix(position, position2, filter) - 0.5;",
+        
+        
+        "vec3 light_color = vec3(1.2,0.8,0.6);",
+        
+        "float t = time*2.0;",
+    
+        
+        "float angle = atan(position.y,position.x)/(2.*3.14159265359);",
+        "angle -= floor(angle);",
+        "float rad = length(position);",
+        
+        "float color = 0.0;",
+        "for (int i = 0; i < 11; i++) {",
+            "float angleFract = fract(angle*256.);",
+            "float angleRnd = floor(angle*25.)+1.;",
+            "float angleRnd1 = fract(angleRnd*fract(angleRnd*.7235)*4.1);",
+            "float angleRnd2 = fract(angleRnd*fract(angleRnd*.82657)*13.724);",
+            "float t = t+angleRnd1*130.0;",
+            "float radDist = sqrt(angleRnd2+float(i));",
+            
+            "float adist = radDist/rad*.1;",
+            "float dist = (t*.1+adist);",
+            "dist = abs(fract(dist)-.5);",
+            "color +=  (1.0 / (dist))*cos(0.7*(sin(t)))*adist/radDist/30.0;",
+    
+            "angle = fract(angle+1.61);",
+        "}",
+        
+        
+        "gl_FragColor = vec4(0,color*0.5,color,1.0)*vec4(light_color,1.0);",
+    "}"
+    
+    
+];
+
+
+
+
+
+
+//  Texture must be power-of-two sized or the filter will break
+spriteconfilter = game.add.sprite(0, 0, 'metal');
+spriteconfilter.width = vw;
+spriteconfilter.height = vh;
+
+var customUniforms = {
+    iChannel0: { type: 'sampler2D', value: spriteconfilter.texture, textureData: { repeat: true } }
+};
+
+filter2 = new Phaser.Filter(game, customUniforms, fragmentSrc);
+filter2.setResolution(vw, vh);
+
+spriteconfilter.filters = [ filter2 ];
+
+
+
+}
+
 function create() {
 
     arraysphexa=[];
@@ -608,16 +696,22 @@ fondosp= game.add.sprite(0, 0, 'fondo');
 
 existelefiler=false;
 try {
- filter = new Phaser.Filter(game, null, game.cache.getShader('bacteria'));
-  if(filter)
-  {texture= filter.addToWorld(0, 0, vw, vh);  existelefiler=true;}  
+ 
+  createelfiltro();
+
+  if(filter2)
+  {
+   
+
+  existelefiler=true;
+  }  
 } catch (error) {
   
 }
 
 
 
-graphics = game.add.graphics(vw*0.35, vh*0.27);
+graphics = game.add.graphics(vw*22.35, vh*0.27);
 
 drawShape(0x000000, 0xa21d7e);
 
@@ -644,11 +738,11 @@ console.log(arraysphexa[0].id);
 //arraysphexa[1].sprite.setTexture(texture, false)
 
 
-sptextminombre= game.add.text(vw*0.05, vh*0.9, "vicite: https://giovannird.itch.io/valerianx", { font: "10px Arial", fill: "#33C7FF", align: "center" });
+sptextminombre= game.add.text(vw*22.05, vh*0.9, "vicite: https://giovannird.itch.io/valerianx", { font: "10px Arial", fill: "#33C7FF", align: "center" });
 sptextminombre.anchor.setTo(0.0, 0.0);
 
 
-sptextvalerian= game.add.text(vw*0.5, vh*0.2, "VALERIANX", { font: "17px Arial", fill: "#33C7FF", align: "center" });
+sptextvalerian= game.add.text(vw*22.5, vh*0.2, "VALERIANX", { font: "17px Arial", fill: "#33C7FF", align: "center" });
 sptextvalerian.anchor.setTo(0.5, 0.5);
 }
 
@@ -698,9 +792,15 @@ function onOut() {
 
 }
 
-var existelefiler=false;
+
 function update() {
-    if(esverdadjuego){  if(existelefiler){filter.update();} // si la var es true e spor qu etoy en menu del valerianx
+
+
+    if(esverdadjuego){ 
+       if(existelefiler){
+        filter2.update();
+    
+        } // si la var es true e spor qu etoy en menu del valerianx
         posicionatextos();// si es false es por que estoy en pelicula o video viendo
     
     }
@@ -727,7 +827,7 @@ elaarray[i].sprite.anchor.x=0.5;
 elaarray[i].sprite.anchor.y=0.5;
 }*/
 
-arraysphexa.push({id:1,sprite:creahexagonosprite(px+vw*0.1,py+vh*0.18,ps,pimg)});
+arraysphexa.push({id:1,sprite:creahexagonosprite(px+vw*2.1,py+vh*0.18,ps,pimg)});
 arraysphexa[0].sprite.anchor.x=0.5;
 arraysphexa[0].sprite.anchor.y=0.5;
 arraysphexa[0].sprite.inputEnabled=true;
@@ -738,7 +838,7 @@ textpeliculas.anchor.setTo(0.5, 0.5);
 textpeliculas.x=arraysphexa[0].sprite.x;
 textpeliculas.y=arraysphexa[0].sprite.y;
 
-arraysphexa.push({id:1,sprite:creahexagonosprite(px+vw*0.16,py+vh*0.46,ps,pimg)});
+arraysphexa.push({id:1,sprite:creahexagonosprite(px+vw*2.16,py+vh*0.46,ps,pimg)});
 arraysphexa[1].sprite.anchor.x=0.5;
 arraysphexa[1].sprite.anchor.y=0.5;
 arraysphexa[1].sprite.inputEnabled=true;
@@ -752,13 +852,16 @@ textseries.anchor.setTo(0.5, 0.5);
 textseries.x=arraysphexa[1].sprite.x;
 textseries.y=arraysphexa[1].sprite.y;
 
-arraysphexa.push({id:1,sprite:creahexagonosprite(px+vw*0.1,py+vh*0.71,ps,pimg)});
+arraysphexa.push({id:1,sprite:creahexagonosprite(px+vw*2.1,py+vh*0.71,ps,pimg)});
 arraysphexa[2].sprite.anchor.x=0.5;
 arraysphexa[2].sprite.anchor.y=0.5;
 arraysphexa[2].sprite.inputEnabled=true;
 arraysphexa[2].sprite.input.draggable=true;
 arraysphexa[2].sprite.events.onInputDown.add(onclikhexajuegos3, this);
 
+//arraysphexa[2].sprite.visible=false;
+//arraysphexa[1].sprite.visible=false;
+//arraysphexa[0].sprite.visible=false;
 
  textJUEGOS = game.add.text(game.world.centerX, game.world.centerY, "JUEGOS", { font: "10px Arial", fill: "#ff0044", align: "center" });
 textJUEGOS.anchor.setTo(0.5, 0.5);
