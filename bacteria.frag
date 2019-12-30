@@ -8,44 +8,20 @@ uniform float time;
 uniform vec2 mouse;
 uniform vec2 resolution;
 
-vec2 onRep(vec2 p, float interval) {
-    return mod(p, interval) - interval * 0.5;
+vec3 ndc(vec2 fragCoord, vec2 res) {
+	return normalize(vec3((fragCoord - res / 2.0) / min(res.x, res.y), 0.05));
 }
 
-float barDist(vec2 p, float interval, float width) {
-    return length(max(abs(onRep(p, interval)) - width, 0.0));
+vec3 render(vec2 fragCoord, vec2 res, float seconds) {
+	vec3 spatial = ndc(fragCoord, res) * 15.0 + vec3(0.0, 0.0, seconds);
+	vec3 cell = floor(spatial);
+	vec3 relativeToCell = fract(spatial);
+	vec3 ret = max(vec3(0.0), vec3(10.0 * (0.1 - distance(relativeToCell, fract(cross(cell, vec3(2.154, -6.21, 0.42))) * 0.5 + 0.25))));
+	return pow(ret + vec3(0.0025, 0.01, 0.025) * vec3(max(0.0, sin(dot(spatial, vec3(0.04, -0.03, 0.021))))), vec3(1.0 / 2.2));
 }
 
-float sceneDist(vec3 p) {
-    float bar_x = barDist(p.yz, 0.5, 0.01);
-    float bar_y = barDist(p.xz, 0.5, 0.01);
-    float bar_z = barDist(p.xy, 0.5, 0.01);
+void main( void )
+{
+	gl_FragColor = vec4( render(gl_FragCoord.xy, resolution, time*.5), 18.0 );
 
-    return min(min(bar_x, bar_y), bar_z);
-}
-
-void main( void ) {
-    vec2 p = ( gl_FragCoord.xy * 2. - resolution.xy ) / min(resolution.x, resolution.y);
-
-
-    vec3 cameraPos = vec3(0., 0.,  time/16.0);
-    float screenZ = 2.5;
-    vec3 rayDirection = normalize(vec3(p, screenZ));
-
-    float depth = 0.0;
-    vec3 col = vec3(0.0);
-
-    for (int i = 0; i < 99; i++) {
-        vec3 rayPos = cameraPos + rayDirection * depth;
-        float dist = sceneDist(rayPos);
-
-        if (dist < 0.0001) {
-            col = vec3(.0047, 0.3839,0.756) * (1.0 - float(i) / 12.0);
-            break;
-        }
-
-        depth += dist;
-    }
-
-    gl_FragColor = vec4(col, 1.0);
 }
