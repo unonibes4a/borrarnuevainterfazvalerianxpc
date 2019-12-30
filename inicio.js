@@ -590,7 +590,7 @@ game.load.image('vidrio', 'vidrio2.png');
 game.load.shader('bacteria', 'bacteria.frag');
 game.load.image('fondo', 'fondo.jpg');
 
-game.load.image('metal', 'metal1.png');
+
 
 }
   
@@ -600,59 +600,6 @@ var texture;
 var fondosp;
 var sptextminombre="Giovanni Rodriguez Diaz";
 
-var filter2;
-var spriteconfilter;
-var existelefiler=false;
-
-function createelfiltro(){
-
-   //  Shader by GhettoWolf (https://www.shadertoy.com/view/Xdl3WH)
-
-   
-var fragmentSrc = [
-  "#ifdef GL_ES",
-  "precision highp float;",
-  "#endif",
-  
-  "uniform float time;",
-  "uniform vec2 resolution;",
-  
-  "void main(void)",
-  "{",
-    "vec2 sp = (gl_FragCoord.xy * 2.0 - resolution.xy) / min(resolution.x, resolution.y);",
-    "sp.y = dot(sp,sp);",
-    "float color = 2.0;",
-   " for (int i = 0; i < 82; i++)",
-    "{",
-      "float t = float(i)+sin(time*0.6+float(i));",
-      "color += 0.01/distance(sp,vec2(sp.x,sin(t+sp.x)));",
-    "}",
-    "gl_FragColor = vec4(color * vec3(.1, 0.05, 0.0), 1.0);",
-  "}"
-  
-  
-  
-];
-
-
-//  Texture must be power-of-two sized or the filter will break
-spriteconfilter = game.add.sprite(0, 0, 'metal');
-spriteconfilter.width = vw;
-spriteconfilter.height = vh;
-
-var customUniforms = {
-    iChannel0: { type: 'sampler2D', value: spriteconfilter.texture, textureData: { repeat: true } }
-};
-
-filter2 = new Phaser.Filter(game, customUniforms, fragmentSrc);
-filter2.setResolution(vw, vh);
-
-spriteconfilter.filters = [ filter2 ];
-
-
-
-}
-
 function create() {
 
     arraysphexa=[];
@@ -661,22 +608,16 @@ fondosp= game.add.sprite(0, 0, 'fondo');
 
 existelefiler=false;
 try {
- 
-  createelfiltro();
-
-  if(filter2)
-  {
-   
-
-  existelefiler=true;
-  }  
+ filter = new Phaser.Filter(game, null, game.cache.getShader('bacteria'));
+  if(filter)
+  {texture= filter.addToWorld(0, 0, vw, vh);  existelefiler=true;}  
 } catch (error) {
   
 }
 
 
 
-graphics = game.add.graphics(vw*0.37, vh*0.27);
+graphics = game.add.graphics(vw*0.36, vh*0.27);
 
 drawShape(0x000000, 0xa21d7e);
 
@@ -699,7 +640,7 @@ test.input.draggable=true;*/
 
 //var sphexpelis2=  creahexagonosprite(300, 100, 0.15,'vidrio');
 var texture; elforarrayhexa(arraysphexa,0,0,sclegame,'vidrio');
-
+console.log(arraysphexa[0].id);
 //arraysphexa[1].sprite.setTexture(texture, false)
 
 
@@ -757,15 +698,9 @@ function onOut() {
 
 }
 
-
+var existelefiler=false;
 function update() {
-
-
-    if(esverdadjuego){ 
-       if(existelefiler){
-        filter2.update();
-    
-        } // si la var es true e spor qu etoy en menu del valerianx
+    if(esverdadjuego){  if(existelefiler){filter.update();} // si la var es true e spor qu etoy en menu del valerianx
         posicionatextos();// si es false es por que estoy en pelicula o video viendo
     
     }
