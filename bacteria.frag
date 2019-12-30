@@ -1,125 +1,111 @@
-/*
- * Original shader from: https://www.shadertoy.com/view/XtcfDM
- */
-
 #ifdef GL_ES
 precision mediump float;
 #endif
 
+#extension GL_OES_standard_derivatives : enable
 
-#define COL_RED .0
-#define COL_GRN .0
-#define COL_BLU 1.0
-
-// glslsandbox uniforms
 uniform float time;
 uniform vec2 resolution;
 
-// shadertoy globals
-float iTime = 0.0;
-vec3  iResolution = vec3(0.0);
-
-// --------[ Original ShaderToy begins here ]---------- //
-float N21(vec2 p) {
-	p = fract(p * vec2(2.15, 8.3));
-    p += dot(p, p + 2.5);
-    return fract(p.x * p.y);
-}
-
-vec2 N22(vec2 p) {
-	float n = N21(p);
-    return vec2(n, N21(p + n));
-}
-
-vec2 getPos(vec2 id, vec2 offset) {
-	vec2 n = N22(id + offset);
-    float x = cos(iTime * n.x);
-    float y = sin(iTime * n.y);
-    return vec2(x, y) * 0.4 + offset;
-}
-
-float distanceToLine(vec2 p, vec2 a, vec2 b) {
-	vec2 pa = p - a;
-    vec2 ba = b - a;
-    float t = clamp(dot(pa, ba) / dot(ba, ba), 0., 1.);
-    return length(pa - t * ba);
-}
-
-float getLine(vec2 p, vec2 a, vec2 b) {
-	float distance = distanceToLine(p, a, b);
-    float dx = 15./iResolution.y;
-    return smoothstep(dx, 0., distance) * smoothstep(1.2, 0.3, length(a - b));
-}
-
-float layer(vec2 st) {
-    float m = 0.;
-    vec2 gv = fract(st) - 0.5;
-    vec2 id = floor(st);
-    // m = gv.x > 0.48 || gv.y > 0.48 ? 1. : 0.;
-    vec2 pointPos = getPos(id, vec2(0., 0.));
-    m += smoothstep(0.05, 0.03, length(gv - pointPos));
-    
-    float dx=15./iResolution.y;
-    // m += smoothstep(-dx,0., abs(gv.x)-.5);
-    // m += smoothstep(-dx,0., abs(gv.y)-.5);
-    // m += smoothstep(dx, 0., length(gv - pointPos)-0.03);
-    
-    vec2 p[9];
-    p[0] = getPos(id, vec2(-1., -1.));
-    p[1] = getPos(id, vec2(-1.,  0.));
-    p[2] = getPos(id, vec2(-1.,  1.));
-    p[3] = getPos(id, vec2( 0., -1.));
-    p[4] = getPos(id, vec2( 0.,  0.));
-    p[5] = getPos(id, vec2( 0.,  1.));
-    p[6] = getPos(id, vec2( 1., -1.));
-    p[7] = getPos(id, vec2( 1.,  0.));
-    p[8] = getPos(id, vec2( 1.,  1.));
-    
-    for (int j = 0; j <=8 ; j++) {
-    	m += getLine(gv, p[4], p[j]);
-        vec2 temp = (gv - p[j]) * 100.;
-        m += 1./dot(temp, temp) * (sin(10. * iTime + fract(p[j].x) * 20.) * 0.5 + 0.5);
-        
-    }
-    
-    m += getLine(gv, p[1], p[3]);
-    m += getLine(gv, p[1], p[5]);
-    m += getLine(gv, p[3], p[7]);
-    m += getLine(gv, p[5], p[7]);
-    
-    // m += smoothstep(0.05, 0.04, length(st - vec2(0., 0.)));
-    return m;
-}
-
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
+// 1次元の乱数
+float rand(float n)
 {
-    vec2 uv = (fragCoord - 0.5 * iResolution.xy) / iResolution.y;
-    
-    float m = 0.;
-    
-    float theta = iTime * 0.1;
-    mat2 rot = mat2(cos(theta), -sin(theta), sin(theta), cos(theta));
-    vec2 gradient = uv;
-    uv = rot * uv;
-    
-    for (float i = 0.; i < 1.0 ; i += 0.25) {
-    	float depth = fract(i + iTime * 0.1);
-        m += layer(uv * mix(10., 0.5, depth) + i * 20.) * smoothstep(0., 0.2, depth) * smoothstep(1., 0.8, depth);
-    }
-    
-    //vec3 baseColor = sin(vec3(3.45, 6.56, 8.78) * iTime * 0.2) * 0.5 + 0.5;
-    vec3 baseColor = sin(vec3(1.0, 1.0, 1.0) * iTime * 0.2) * 0.5 + 1.;
-    
-    vec3 col = (m - gradient.y) * baseColor;
-    // Output to screen
-    fragColor = vec4(col.r*COL_RED,col.g*COL_GRN,col.b*COL_BLU, 1.0);
+	float fl = floor(n);
+	float fc = fract(n);
+	return mix(fract(sin(fl)), fract(sin(fl + 1.0)), fc);
 }
-// --------[ Original ShaderToy ends here ]---------- //
+
+// 2次元の乱数
+vec2 rand2(in vec2 p)
+{
+	return fract(
+		vec2(
+			sin(p.x * 1.32 + p.y * 54.077),
+			cos(p.x * 91.32 + p.y * 9.077)
+		)
+	);
+}
+
+// iq氏のウェブページを参考に,ボロノイエッヂを生成する
+// https://www.iquilezles.org/www/articles/voronoilines/voronoilines.htm
+float voronoi(in vec2 v, in float e)
+{
+	vec2 p = floor(v);
+	vec2 f = fract(v);
+	
+	vec2 res = vec2(8.0);
+	
+	for(int j = -1; j <= 1; ++j)
+		for(int i = -1; i <= 1; ++i)
+		{
+			vec2 b = vec2(i, j);
+			vec2 r = b - f + rand2(p + b);
+			
+			// 基盤感を出すため,チェビシフ距離を用いる
+			float d = max(abs(r.x), abs(r.y));
+			
+			if(d < res.x)
+			{
+				res.y = res.x;
+				res.x = d;
+			}
+			
+			else if(d < res.y)
+			{
+				res.y = d;
+			}
+		}
+	
+	vec2 c = sqrt(res);
+	float dist = c.y - c.x;
+	
+	// 最終的に出力されるのは,指定された濃さのエッヂ
+	return 1.0 - smoothstep(0.0, e, dist);
+}
+
+// 平面上における回転
+mat2 rotate(in float a)
+{
+	return mat2(cos(a), -sin(a), sin(a), cos(a));
+}
 
 void main(void)
 {
-    iTime = time;
-    iResolution = vec3(resolution, 0.0);
-
-    mainImage(gl_FragColor, gl_FragCoord.xy);
+	// 座標を正規化する
+	vec2 uv =  gl_FragCoord.xy / resolution * 4.0 - 23.0;
+	uv.y *= resolution.y / resolution.x;
+	uv *= rotate(0.3);
+	
+	// 最終的に出力する色の値
+	float value = 0.0;     
+	float light = 0.0;
+	
+	float f = 1.0;    // UV座標にかける値
+	float a = 0.7;    // valueに加える値の係数
+	
+	
+	for(int i = 0; i < 3; ++i)
+	{
+		// 導線が通っているように見せるやつ
+		float v1 = voronoi(uv * f + 1.0 + time * 0.2 , 0.1);
+		v1 = pow(v1, 2.0);
+		value += a * rand(v1 * 5.5 + 0.1);
+		
+		// 電気が通ってる感じに見せるやつ
+		float v2 = voronoi(uv * f * 1.5 + 5.0 + time, 0.2) * 1.1;
+		v2 = pow(v2, 5.0);
+		light += pow(v1 * (0.5 * v2), 1.5);
+		
+		// 係数諸々を変更
+		f *= 2.0;
+		a *= 0.6;
+	}
+	
+	// 出力する色の決定
+	vec3 color;
+	color += vec3(0.0, 0.5, 1.0) * value;
+	color += vec3(0.4, 0.7, 1.0) * light;
+	
+	// 色を出力する
+	gl_FragColor = vec4(color, 1.0);
 }
