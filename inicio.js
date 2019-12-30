@@ -245,7 +245,7 @@ function elforparasaberquetempioradas(){
    
   }
 
- console.log(arraysonestastemporadas[0]["temporada"]["v"+String(intcomteodevideos+1)].pg);
+
  festoyenestatemporada(arraysonestastemporadas); //tener 
 }
 var stimgparavideodetemop="";
@@ -346,8 +346,8 @@ function elforparacrearvideosdetempora(){
     }
 
   }
- 
-  console.log(arraytengolosvideosseries);
+
+  
   creaelpanelconvideosdelatemporada();
 
 }
@@ -573,8 +573,13 @@ vw=window.innerWidth*1;
 vh=window.innerHeight;
 sclegame=0.000235571*(vw)+(0.028209658);
 
-game.destroy();
-game = new Phaser.Game(vw, vh, Phaser.AUTO, 'phaser-example', {update:update,preload: preload, create: create });
+try {
+  //game.destroy();
+  game = new Phaser.Game(vw, vh, Phaser.AUTO, 'phaser-example', {update:update,preload: preload, create: create });
+
+} catch (error) {
+  
+}  
 
 }
 
@@ -793,7 +798,9 @@ vw=window.innerWidth*1;
 vh=window.innerHeight;
 //  sclegame= 0.5227722772277228
 //console.log("yoo  "+ (vh/vw));
-nuevogame();
+//nuevogame();
+detenerphaserudate();
+reanudarphaserudate();
 
 
 }
@@ -802,7 +809,7 @@ function oklistophas(){
  game = new Phaser.Game(vw, vh, Phaser.AUTO, 'phaser-example', {update:update,preload: preload, create: create });
 
 
- setTimeout(function(){onresizemio();},2000);
+ //setTimeout(function(){onresizemio();},2000);
 }
 
 
@@ -837,13 +844,27 @@ function onclikhexajuegos3 () {
 function detenerphaserudate(){
   esverdadjuego=false;
   game.paused=true;
+  game.destroy();
+  $("#phaser-example").empty();
+ // nuevogame();
 
 }
 
 function reanudarphaserudate(){
   esverdadjuego=true;
-  game.paused=false;
- 
+  //game.paused=false;
+  try {
+    if(game){
+      game.paused=false;
+      game.destroy();
+      $("#phaser-example").empty();
+    }
+  } catch (error) {
+    
+  }
+  $("#phaser-example").empty();
+  alert("crea nuevo juego");
+  nuevogame();
 
 }
 
