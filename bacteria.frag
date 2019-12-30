@@ -1,30 +1,31 @@
-// shitter
-//#ifdef GL_ES
+#ifdef GL_ES
 precision mediump float;
-//#endif
+#endif
 
-//#extension GL_OES_standard_derivatives : enable
+#extension GL_OES_standard_derivatives : enable
 
 uniform float time;
 uniform vec2 mouse;
 uniform vec2 resolution;
+float t= time;
 
-void main(void){
+
+void main( void ) {
 	
-	vec2 p = (gl_FragCoord.xy * 2.0 - resolution) / min(resolution.x, resolution.y);
-	p.y = dot(p,p);
-	vec3 color = vec3(0.0, 0.3, 0.5);
-	
-	float f = 0.8;
-	float PI = 3.141592;
-	for(float i = 0.0; i < 7.0; i++){
-		
-		float s = sin(time + i * PI / 10.0) * 0.8;
-		float c = cos(time + i * PI / 10.0) * 0.8;
- 
-		f += 0.005 / (abs(p.x + c) * abs(p.y + s));
+	vec2 p = ( gl_FragCoord.xy * 2.0 - resolution.xy ) /min(resolution.x,resolution.y);
+
+        float c = 0.0;
+
+	for(float l = 0.5;l < 34.0;l++){
+		for (float i = 0.0;i < 5.0;i++){
+			float j = i - 1.0; 
+	        	float si = sin(t + i * 0.628318) / 2.0 - sin(t/4.-l);
+        		float co = cos(t - i * 0.628318) / 8.0 + tan(t/8.-l);
+	        	c += 0.003 / abs(length(p - vec2(si,co)/(1.25/abs(cos(t/4.0)))) - 0.1 );
+		}
 	}
 	
-	
-	gl_FragColor = vec4(vec3(f * color), 1.0);
+	float tt = 3.0;
+	gl_FragColor += vec4(vec3(abs(c*atan(tt))- 0.5,c*cos(tt),abs(c*sin(tt))), 1.0 );
+
 }
