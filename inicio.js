@@ -466,6 +466,7 @@ function cambiapeliscula(stsrc){  // iframe le pasa la pelicula o el video elibr
 
 
 detenerphaserudate();
+
 document.getElementById("idvisorpelis").style.display="block";
   document.getElementById("btmostrarmenu").style.display="block";
 document.getElementById("idiframe").src=stsrc;
@@ -504,7 +505,7 @@ reanudarphaserudate();
 
 
 function fcbtcerrarpanelpeliculas(){
-
+  reanudarphaserudate();
     document.getElementById("idpaneldepeliculas").style.display="none";
     document.getElementById("myInputpeli").value="";
    
@@ -646,7 +647,7 @@ sptextvalerian.anchor.setTo(0.5, 0.5);
 
 setTimeout(function () {
 
-  game.paused=true;
+  //game.paused=true;
   setTimeout(function () {
 
    // game.paused=false;
@@ -835,12 +836,14 @@ function onclikhexajuegos3 () {
 
 function detenerphaserudate(){
   esverdadjuego=false;
-
+  game.paused=true;
 
 }
 
 function reanudarphaserudate(){
   esverdadjuego=true;
+  game.paused=false;
+ 
 
 }
 
