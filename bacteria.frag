@@ -1,220 +1,169 @@
-/*
- * Original shader from: https://www.shadertoy.com/view/wljSz1
- */
-
 #ifdef GL_ES
 precision mediump float;
 #endif
-
-// glslsandbox uniforms
+ 
 uniform float time;
+uniform vec2 mouse;
 uniform vec2 resolution;
 
-// shadertoy emulation
-#define iTime time
-#define iResolution resolution
+#define iterations 10
+#define formuparam2 0.79
+ 
+#define volsteps 5
+#define stepsize 0.290
+ 
+#define zoom 0.800
+#define tile   0.850
+#define speed2  0.10
 
-// Emulate a black texture
-#define texture(s, uv) vec4(0.0)
-#define texelFetch(s, uv, lod) vec4(0.0)
+#define brightness 0.002
+#define darkmatter 0.500
+#define distfading 0.560
+#define saturation 0.700
 
-// --------[ Original ShaderToy begins here ]---------- //
-//#define SPLOTCHES
-#define BUMPY
-float T = 0.;
-float hash(float x){
-    return fract(sin(x*54265.135165416));
+#define transverseSpeed zoom*0.1
+#define cloud 0.01
+ 
+float triangle(float x, float a) { 
+	float output2 = 2.0*abs(  2.0*  ( (x/a) - floor( (x/a) + 0.5) ) ) - 1.0;
+	return output2;
+}
+ 
+float field(in vec3 p) {	
+	float strength = 7. + .03 * log(1.e-6 + fract(sin(time) * 4373.11));
+	float accum = 0.;
+	float prev = 0.;
+	float tw = 0.;	
+
+	for (int i = 0; i < 6; ++i) {
+		float mag = dot(p, p);
+		p = abs(p) / mag + vec3(-.5, -.8 + 0.1*sin(time*0.7 + 2.0), -1.1+0.3*cos(time*0.3));
+		float w = exp(-float(i) / 7.);
+		accum += w * exp(-strength * pow(abs(mag - prev), 2.3));
+		tw += w;
+		prev = mag;
+	}
+	return max(0., 5. * accum / tw - .7);
 }
 
-// by TinyTexel, mentioned at https://www.iquilezles.org/www/articles/smin/smin.htm
-float smin(float a, float b, float k){
-    float h = max(k-abs(a-b), 0.0)/k;
-    return min(a, b) - h*h*h*k*(3.0/6.0);
-}
+void main() {   
+     	vec2 uv2 = 2. * gl_FragCoord.xy / vec2(512) - 1.;
+	vec2 uvs = uv2 * vec2(512)  / 512.;
+	
+	float time2 = time;               
+        float speed = speed2;
+        speed = .01 * cos(time2*0.02 + 3.1415926/4.0);          
+	//speed = 0.0;	
+    	float formuparam = formuparam2;
+	
+    	//get coords and direction	
+	vec2 uv = uvs;		       
+	//mouse rotation
+	float a_xz = 0.9;
+	float a_yz = -.6;
+	float a_xy = 0.9 + time*0.08;	
+	
+	mat2 rot_xz = mat2(cos(a_xz),sin(a_xz),-sin(a_xz),cos(a_xz));	
+	mat2 rot_yz = mat2(cos(a_yz),sin(a_yz),-sin(a_yz),cos(a_yz));		
+	mat2 rot_xy = mat2(cos(a_xy),sin(a_xy),-sin(a_xy),cos(a_xy));
+	
 
-// store the matrix globally so the 2D "normal map" sticks better
-mat2 R;
-float map(vec3 p){
-    // rotate
-    float r = 3.14159*sin(p.z*0.15)+T*0.1;
-    R = mat2(cos(r), sin(r), -sin(r), cos(r));
-    p.xy *= R;
-    vec3 op = p;
-    
-    // per-cell random values
-    float h = hash(floor(p.x+p.y+p.z));
-    float h2 = 3.141*hash(floor(-p.x-p.y-p.z));
-    
-    // bumpy
-    #ifdef BUMPY
-    float f = pow(texture(iChannel2, p*0.1).b,4.0);
-   	vec3 dd = vec3(sin(p.z*71.), cos(p.x*73.), -cos(p.y*77.))
-               -0.6*vec3(cos(p.y*141.), sin(p.z*143.), -sin(p.x*147.));
-    p = mix(p, p-dd*0.005, f);
-    #endif
-    
-    // repeat lattice
-    const float a = 1.0;
-    p = mod(p, a)-a*0.5;
-    
-    // primitives
-    // center sphere
-    float v = length(p)-(0.02+(0.18*h*(0.6+0.4*sin(3.0*T+h2)) ));
-    // four connecting cylinders
-    v = smin(v, length(p.xy+0.01*sin(-3.2*T+13.0*op.z))-0.03, 0.2);
-    v = smin(v, length(p.xz+0.01*cos(-4.1*T+11.0*(op.y-op.z)))-0.03, 0.2);
-    v = smin(v, length(p.yz+0.01*sin(-5.0*T-8.0*(op.x-op.z)))-0.03, 0.2);
-    
-    return v;
-}
+	float v2 =1.0;	
+	vec3 dir=vec3(uv*zoom,1.); 
+	vec3 from=vec3(0.0, 0.0,0.0);                               
+        from.x -= 5.0*(1.0-1.0);
+        from.y -= 5.0*(1.0-0.7);
+               
+               
+	vec3 forward = vec3(0.,0.,1.);   
+	from.x += transverseSpeed*(1.0)*cos(0.01*time) + 0.001*time;
+	from.y += transverseSpeed*(1.0)*sin(0.01*time) +0.001*time;
+	from.z += 0.003*time;	
+	
+	dir.xy*=rot_xy;
+	forward.xy *= rot_xy;
+	dir.xz*=rot_xz;
+	forward.xz *= rot_xz;	
+	dir.yz*= rot_yz;
+	forward.yz *= rot_yz;
+	
+	from.xy*=-rot_xy;
+	from.xz*=rot_xz;
+	from.yz*= rot_yz;
+	 
+	
+	//zoom
+	float zooom = (time2-3311.)*speed;
+	from += forward* zooom;
+	float sampleShift = mod( zooom, stepsize );
+	 
+	float zoffset = -sampleShift;
+	sampleShift /= stepsize; // make from 0 to 1
+	
+	//volumetric rendering
+	float s=0.24;
+	float s3 = s + stepsize/2.0;
+	vec3 v=vec3(0.);
+	float t3 = 0.0;	
+	
+	vec3 backCol2 = vec3(0.);
+	for (int r=0; r<volsteps; r++) {
+		vec3 p2=from+(s+zoffset)*dir;// + vec3(0.,0.,zoffset);
+		vec3 p3=from+(s3+zoffset)*dir;// + vec3(0.,0.,zoffset);
+		
+		p2 = abs(vec3(tile)-mod(p2,vec3(tile*2.))); // tiling fold
+		p3 = abs(vec3(tile)-mod(p3,vec3(tile*2.))); // tiling fold		
+		#ifdef cloud
+		t3 = field(p3);
+		#endif
+		
+		float pa,a=pa=0.;
+		for (int i=0; i<iterations; i++) {
+			p2=abs(p2)/dot(p2,p2)-formuparam; // the magic formula
+			//p=abs(p)/max(dot(p,p),0.005)-formuparam; // another interesting way to reduce noise
+			float D = abs(length(p2)-pa); // absolute sum of average change
+			a += i > 7 ? min( 12., D) : D;
+			pa=length(p2);
+		}
+		
+		
+		//float dm=max(0.,darkmatter-a*a*.001); //dark matter
+		a*=a*a; // add contrast
+		//if (r>3) fade*=1.-dm; // dark matter, don't render near
+		// brightens stuff up a bit
+		float s1 = s+zoffset;
+		// need closed form expression for this, now that we shift samples
+		float fade = pow(distfading,max(0.,float(r)-sampleShift));		
+		//t3 += fade;		
+		v+=fade;
+	       	//backCol2 -= fade;
 
-vec3 normal(vec3 p){
-	float o = map(p);
-    const float e = 0.001;
-    return normalize( vec3(map(p+vec3(e,0,0))-o,
-                           map(p+vec3(0,e,0))-o,
-                           map(p+vec3(0,0,e))-o));
-}
+		// fade out samples as they approach the camera
+		if( r == 0 )
+			fade *= (1. - (sampleShift));
+		// fade in samples as they approach from the distance
+		if( r == volsteps-1 )
+			fade *= sampleShift;
+		v+=vec3(s1,s1*s1,s1*s1*s1*s1)*a*brightness*fade; // coloring based on distance
+		
+		backCol2 += mix(.4, 1., v2) * vec3(1.8 * t3 * t3 * t3, 1.4 * t3 * t3, t3) * fade;
 
-vec3 march(vec3 o, vec3 dir){
-    vec3 p = o;
-    float e = 0.0;
-    for(int i = 0; i < 100; ++i){
-        float d = 0.5*map(p);
-        e += d;
-        if(d < 0.03 || e > 6.0)
-            break;
-        p += d*dir;
-    }
-    
-    return p;
-}
+		
+		s+=stepsize;
+		s3 += stepsize;		
+	}
+		       
+	v=mix(vec3(length(v)),v,saturation); //color adjust	
 
-vec4 subsurface(vec3 o, vec3 dir){
-    vec3 p = o;
-    float e = 0.0;
-    for(int i = 0; i < 7; ++i){
-        float d = map(p);
-        e += -d;
-        if(d > -0.001)
-            break;
-        p -= d*dir;
-    }
-    
-    return vec4(p, e);
-}
-
-float G(float dotNV, float k){
-	return 1.0/(dotNV*(1.0-k)+k);
-}
-
-// from http://filmicworlds.com/blog/optimizing-ggx-shaders-with-dotlh/
-float ggx(vec3 N, vec3 V, vec3 L, float roughness, float F0){
-	float alpha = roughness*roughness;
-
-	vec3 H = normalize(V+L);
-
-	float dotNL = clamp(dot(N,L),0.,1.);
-	float dotNV = clamp(dot(N,V),0.,1.);
-	float dotNH = clamp(dot(N,H),0.,1.);
-	float dotLH = clamp(dot(L,H),0.,1.);
-
-	float F, D, vis;
-
-	float alphaSqr = alpha*alpha;
-	float pi = 3.14159;
-	float denom = dotNH * dotNH *(alphaSqr - 1.0) + 7.0;
-	D = alphaSqr/(pi * denom * denom);
-
-	float dotLH5 = pow(1.0 - dotLH, 5.0);
-	F = F0 + (1.0 - F0)*(dotLH5);
-
-	float k = alpha * 0.5;
-
-	return dotNL * D * F * G(dotNL,k)*G(dotNV,k);
-}
-
-void mainImage(out vec4 fragColor, vec2 fragCoord){
-    vec2 uv = fragCoord/iResolution.xy;
-    
-    const float tm = 2.0;
-    T = iTime*tm;
-    float ot = T;
-    
-    // quadratic, increase this if your gpu is gpu enough
-    const int samples = 2;
-    
-    vec3 c = vec3(0);
-    for(int y = 0; y < samples; ++y)
-    for(int x = 0; x < samples; ++x){
-        // anti-aliasing
-        vec2 p = -1.0 + 2.0 * (uv + (-0.5+(vec2(x, y)/float(samples)))/iResolution.xy);
-        p.x *= iResolution.x/iResolution.y;
-        
-        // motion blur
-        float r = texelFetch(iChannel0, ivec2(mod(fragCoord*float(samples)+vec2(x,y),1024.)),0).r;
-        T = ot+(tm*r)/36.0;
-        
-        // camera setup
-        vec3 cam = vec3(0.1*sin(T*0.51),0.1*cos(T*0.59),T);
-        vec3 l = vec3(0.6*cos(T*0.83),0.6*sin(T*0.79),cam.z+3.0+0.5*sin(0.7*T));
-    	vec3 dir = normalize(vec3(p, 2.0)+0.1*vec3(sin(T*0.63),cos(T*0.71),0));
-        
-        // solve intersection and normal
-    	vec3 pos = march(cam, dir);
-        vec3 mp = pos;
-        mp.xy *= R;
-        vec3 np = pos+vec3(0,0,-0.08*texture(iChannel1, mp.xy*4.0).r);
-        vec3 n = normalize(mix(normal(np), pow(texture(iChannel2, pos*2.0).xyz, vec3(2)), 0.08));
-        
-        // shade
-        vec3 ld = normalize(l-pos);
-        vec3 alb = mix((vec3(0.3,0.5,0.9)),
-                       (vec3(0.75,0.9,0.4)),
-                       texture(iChannel2, 0.04*mp).r)*1.25;
-        #ifdef SPLOTCHES
-        float mat = smoothstep(0.1,0.8,pow(texture(iChannel2, 0.14*mp).b, 3.0));
-        alb = mix(alb, vec3(0.9,0.78,0.42), mat);
-        #endif
-        float dif = 0.5+0.5*dot(n, ld);
-        
-        #ifdef SPLOTCHES
-        float spe = ggx(n, -dir, ld, mix(0.3,0.5,mat), mix(0.7,1.0,mat));
-        #else
-        float spe = ggx(n, -dir, ld, 0.3, 0.7);
-        #endif
-        float att = 1.0+pow(distance(l, pos), 2.0);
-        dif /= att;
-        spe /= att;
-        
-        // subsurface scattering
-        vec3 h = normalize(mix(-normal(pos), dir, 0.5));
-        // sv.zyz contains outgoing position, w contains accumulate distance (path "tightness)
-        vec4 sv = subsurface(pos+h*0.02, dir);
-        // subsurface magic term
-        float sss = max(0.0, 1.0-3.0*sv.w);
-        // light visibility across the volume
-        float ssha = max(0.0, dot(normal(sv.xyz), normalize(l-sv.xyz)));
-        sss /= att;
-        ssha /= att;
-        
-        // mix reflecting and refracting contributions
-        dif = mix(dif, mix(sss, ssha, 0.2), 0.5);
-        
-        c += alb*dif+0.025*spe;
-    }
-    
-	fragColor.rgb = c/float(samples*samples);
-    
-    // "color grade" and gamma
-    fragColor.rgb = mix(vec3(dot(fragColor.rgb, vec3(.2125,.7154,.0721))), fragColor.rgb, 9.0);
-    fragColor.rgb = smoothstep(0.0, 1.25, fragColor.rgb);
-    fragColor.rgb = pow(fragColor.rgb, vec3(1.0/2.2));
-}
-// --------[ Original ShaderToy ends here ]---------- //
-
-void main(void)
-{
-    mainImage(gl_FragColor, gl_FragCoord.xy);
-    gl_FragColor.a = 1.0;
+	vec4 forCol2 = vec4(v*.01,1.);	
+	#ifdef cloud
+	backCol2 *= cloud;
+	#endif	
+	backCol2.b *= -3.8;
+	backCol2.r *= 0.05;	
+	
+	backCol2.b = 1.5*mix(backCol2.g, backCol2.b, 0.1);
+	backCol2.g = -0.;
+	backCol2.bg = mix(backCol2.gb, backCol2.bg, 0.39*(cos(1.00) + 1.0));	
+	gl_FragColor = forCol2 + vec4(backCol2, 1.0);
 }
