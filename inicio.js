@@ -468,7 +468,8 @@ function cambiapeliscula(stsrc){  // iframe le pasa la pelicula o el video elibr
 detenerphaserudate();
 
 document.getElementById("idvisorpelis").style.display="block";
-  document.getElementById("btmostrarmenu").style.display="block";
+document.getElementById("btmostrarmenu").style.display="block";
+document.getElementById("btmostrarenviavideonofunciona").style.display="block";
 document.getElementById("idiframe").src=stsrc;
     
 }
