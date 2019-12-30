@@ -139,7 +139,5 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 	float r=1.-length(max(abs(fragCoord.xy / iResolution.xy*2.-1.)-.5,0.)); 
 	painting*=r;
 	
-	painting *= vec3(1.5, 0.2, 0.3);
-	
 	fragColor = vec4(painting, 7.);
 }
