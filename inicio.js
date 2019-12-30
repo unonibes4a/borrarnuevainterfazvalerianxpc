@@ -590,7 +590,7 @@ game.load.image('vidrio', 'vidrio2.png');
 game.load.shader('bacteria', 'bacteria.frag');
 game.load.image('fondo', 'fondo.jpg');
 
-game.load.image('metal', 'metal.png');
+game.load.image('metal', 'metal1.png');
 
 }
   
@@ -609,66 +609,46 @@ function createelfiltro(){
    //  Shader by GhettoWolf (https://www.shadertoy.com/view/Xdl3WH)
 
    var fragmentSrc = [
-    "#ifdef GL_ES",
+
     "precision mediump float;",
+
+    "uniform float     time;",
+    "uniform vec2      resolution;",
+    "uniform sampler2D iChannel0;",
+
+    "#ifdef GL_ES",
+    "precision highp float;",
     "#endif",
-    
-    "uniform float time;",
-    "uniform vec2 mouse;",
-    "uniform vec2 resolution;",
-    
-    "float sigmoid(float x) {",
-    "return 2./(1. + exp2(-x)) - 1.;",
-    "}",
-    
-    
+
+    "#define PI 3.1416",
+
     "void main( void ) {",
-        "vec2 position = gl_FragCoord.xy;",
-        "vec2 aspect = vec2(1.,resolution.y/resolution.x );",
-        "position -= 0.5*resolution;",
-        "vec2 position2 = 0.5 + (position-0.25)/resolution*2.*aspect;",
-        "float filter = sigmoid(pow(2.3,71.5)*(length((position + 0.5)*aspect) - 0.015))*0.5 +0.5;",
-        "position -= (-0.5)*resolution;",
-        "position = mix(position, position2, filter) - 0.5;",
-        
-        
-        "vec3 light_color = vec3(1.2,0.8,0.6);",
-        
-        "float t = time*2.0;",
-    
-        
-        "float angle = atan(position.y,position.x)/(2.*3.14159265359);",
-        "angle -= floor(angle);",
-        "float rad = length(position);",
-        
-        "float color = 0.0;",
-        "for (int i = 0; i < 11; i++) {",
-            "float angleFract = fract(angle*256.);",
-            "float angleRnd = floor(angle*25.)+1.;",
-            "float angleRnd1 = fract(angleRnd*fract(angleRnd*.7235)*4.1);",
-            "float angleRnd2 = fract(angleRnd*fract(angleRnd*.82657)*13.724);",
-            "float t = t+angleRnd1*130.0;",
-            "float radDist = sqrt(angleRnd2+float(i));",
-            
-            "float adist = radDist/rad*.1;",
-            "float dist = (t*.1+adist);",
-            "dist = abs(fract(dist)-.5);",
-            "color +=  (1.0 / (dist))*cos(0.7*(sin(t)))*adist/radDist/30.0;",
-    
-            "angle = fract(angle+1.61);",
-        "}",
-        
-        
-        "gl_FragColor = vec4(0,color*0.5,color,1.0)*vec4(light_color,1.0);",
+
+        "//map the xy pixel co-ordinates to be between -1.0 to +1.0 on x and y axes",
+        "//and alter the x value according to the aspect ratio so it isn't 'stretched'",
+
+        "vec2 p = (2.0 * gl_FragCoord.xy / resolution.xy - 1.0) * vec2(resolution.x / resolution.y, 1.0);",
+
+        "//now, this is the usual part that uses the formula for texture mapping a ray-",
+        "//traced cylinder using the vector p that describes the position of the pixel",
+        "//from the centre.",
+
+        "vec2 uv = vec2(atan(p.y, p.x) * 1.0/PI, 1.0 / sqrt(dot(p, p))) * vec2(2.0, 1.0);",
+
+        "//now this just 'warps' the texture read by altering the u coordinate depending on",
+        "//the val of the v coordinate and the current time",
+
+        "uv.x += sin(2.0 * uv.y + time * 0.5);",
+
+        "//this divison makes the color value 'darker' into the distance, otherwise",
+        "//everything will be a uniform brightness and no sense of depth will be present.",
+
+        "vec3 c = texture2D(iChannel0, uv).xyz / (uv.y * 0.5 + 1.0);",
+
+        "gl_FragColor = vec4(c, 1.0);",
+
     "}"
-    
-    
 ];
-
-
-
-
-
 
 //  Texture must be power-of-two sized or the filter will break
 spriteconfilter = game.add.sprite(0, 0, 'metal');
