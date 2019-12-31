@@ -104,8 +104,8 @@ function traejsonjuegos(){
         arraryjuegos2019=result;
    
         
-      //  traejsonseries();
-
+     
+        traejsonlibros();
      
         
       });
@@ -184,6 +184,112 @@ for(var i in arraryjuegos2019){
 
 
 
+
+
+
+
+
+
+// inicio libros
+
+
+
+
+var arrarylibros019={};
+
+
+function traejsonlibros(){
+  
+
+       $.getJSON("libros.json", function(result){
+        
+        arrarylibros019=result;
+   
+        
+     
+
+     
+        
+      });
+}
+
+
+
+
+
+
+
+
+function elfordecrearlibrosenpanel1 () { 
+  empityelementosid("#idverdaderopeliculas");
+  for(var i in arrarylibros019){
+    
+    crealaslibrosenpanel(arrarylibros019[i].idname,
+      arrarylibros019[i].title,arrarylibros019[i].img);
+      
+
+      
+  }
+ }
+
+
+
+
+ function crealaslibrosenpanel(idname,idtitle,idimgurl){
+  stringpelis="";
+
+  
+  stringpelis=  "<div  class='column'><a id='"+ String(idname)+"'" +"  onclick='cuallibrospora(this)'>"+
+  "<div class='card'>  <h3 class='pelih3'>"+idtitle+"<br></h3> <img  class='climgrwo' src='"+idimgurl+"'  "+"alt=''>"+
+    "<p>valerianx</p>    </div>"+"</a>  </div>";
+
+
+    
+  $("#idverdaderopeliculas").append(stringpelis);
+
+
+}
+
+
+
+
+
+
+
+
+
+var estalibro="";
+
+
+function cuallibrospora(thiss){
+
+  
+  estalibro=thiss;
+
+
+
+for(var i in arrarylibros019){
+
+    if(arrarylibros019[i].idname==estalibro.id){
+
+
+        esverdadjuego=false;
+
+
+        cambiapeliscula(arrarylibros019[i].pg);
+    
+    }
+}
+  }
+
+
+
+
+
+
+
+
+//find e juegos
 
 
 
@@ -920,6 +1026,29 @@ textJUEGOS.anchor.setTo(0.5, 0.5);
 textJUEGOS.x=arraysphexa[2].sprite.x;
 textJUEGOS.y=arraysphexa[2].sprite.y;
 
+
+
+
+
+arraysphexa.push({id:1,sprite:creahexagonosprite(px+vw*0.9,py+vh*0.18,ps,pimg)});
+arraysphexa[3].sprite.anchor.x=0.5;
+arraysphexa[3].sprite.anchor.y=0.5;
+arraysphexa[3].sprite.inputEnabled=true;
+arraysphexa[3].sprite.input.draggable=true;
+arraysphexa[3].sprite.events.onInputDown.add(onclikhexalibros3, this);
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 var textpeliculas ;
 var textseries ;
@@ -985,6 +1114,17 @@ function onclikhexajuegos3 () {
   elfordecrearjuegosenpanel1 ();
   ffbuscarlaspeliculas();
 }
+
+
+function onclikhexalibros3(){
+  document.getElementById("idpaneldepeliculas").style.display="block";
+  elfordecrearlibrosenpanel1 ();
+  ffbuscarlaspeliculas();
+
+}
+
+
+
 
 
 function detenerphaserudate(){
