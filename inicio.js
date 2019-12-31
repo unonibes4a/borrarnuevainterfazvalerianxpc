@@ -944,8 +944,7 @@ function fvideonofunciona()  {
   objnotficarfirgoovideo={videourl:elvideoanotfic,id:elidnamedelvideoanotific,hoyesx:todayx};
 
   firebase.database().ref("notificar").push(objnotficarfirgoovideo);
-  elvideoanotfic="";
-  elidnamedelvideoanotific="";
+  
   alert("Estamos verificando el video gracias");
 
   }
