@@ -1,3 +1,13 @@
+
+var firebaseConfig;
+var firebase;
+var todayx = new Date();
+var dd = String(todayx.getDate()).padStart(2, '0');
+var mm = String(todayx.getMonth() + 1).padStart(2, '0'); //January is 0!
+var yyyy = todayx.getFullYear();
+
+todayx = mm + '/' + dd + '/' + yyyy;
+
 $(document).ready(function(){
    
     todoinicia();
@@ -6,7 +16,20 @@ $(document).ready(function(){
 
   });
 
+
+
+  function hoyeseldia() {
+
+    todayx = new Date();
+    dd = String(todayx.getDate()).padStart(2, '0');
+    mm = String(todayx.getMonth() + 1).padStart(2, '0'); //January is 0!
+    yyyy = todayx.getFullYear();
+   
+   todayx = mm + '/' + dd + '/' + yyyy;
+    }
   function todoinicia(){
+    hoyeseldia();
+    iniciafiregoo();
 
     iniciaelphase();
     iniciapaneldepeliculas();
@@ -466,13 +489,19 @@ function cambiapeliscula(stsrc){  // iframe le pasa la pelicula o el video elibr
 
 
 detenerphaserudate();
+document.getElementById("idpaneldepeliculas").style.display="none";
+
+
+
 objetoiframe="";
+
 document.getElementById("idvisorpelis").style.display="block";
 document.getElementById("btmostrarmenu").style.display="block";
 
 
 objetoiframe=document.getElementById("idiframe").src=stsrc;
-
+elvideoanotfic=stsrc;
+elidnamedelvideoanotific="id";
 
 if(objetoiframe){
   document.getElementById("btmostrarenviavideonofunciona").style.display="block";
@@ -480,8 +509,12 @@ if(objetoiframe){
 else{
   document.getElementById("btmostrarenviavideonofunciona").style.display="block";
 }
+
     
 }
+
+
+
 
 
 
@@ -657,7 +690,7 @@ sptextminombre= game.add.text(vw*0.05, vh*0.9, "vicite: https://giovannird.itch.
 sptextminombre.anchor.setTo(0.0, 0.0);
 
 
-sptextvalerian= game.add.text(vw*0.5, vh*0.2, "VALERIANX", { font: "17px Arial", fill: "#33C7FF", align: "center" });
+sptextvalerian= game.add.text(vw*0.5, vh*0.2, "VALERIANX "+ todayx, { font: "17px Arial", fill: "#33C7FF", align: "center" });
 sptextvalerian.anchor.setTo(0.5, 0.5);
 
 setTimeout(function () {
@@ -877,5 +910,44 @@ function reanudarphaserudate(){
   nuevogame();
 
 }
+
+
+function iniciafiregoo()
+{
+
+   firebaseConfig = {
+
+
+
+    apiKey: "AIzaSyB-BWfFE9cQEFsesxWwHE7KUtnnQQHMvAM",
+    authDomain: "notifivalerianx.firebaseapp.com",
+    databaseURL: "https://notifivalerianx.firebaseio.com",
+    projectId: "notifivalerianx",
+    storageBucket: "notifivalerianx.appspot.com",
+    messagingSenderId: "311893602004",
+    appId: "1:311893602004:web:a70a2c72cc11b8bd2c1541",
+    measurementId: "G-ZBHW00SHK9"
+
+
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+}
+
+var objnotficarfirgoovideo={videourl:"videorll",id:"idnamees"};
+var elvideoanotfic="";
+var elidnamedelvideoanotific="";
+function fvideonofunciona()  {
+  //objnotficarfirgoovideo=[];
+  hoyeseldia();
+  objnotficarfirgoovideo={videourl:"videorll",id:"idnamees",hoyesx:todayx};
+  objnotficarfirgoovideo={videourl:elvideoanotfic,id:elidnamedelvideoanotific,hoyesx:todayx};
+
+  firebase.database().ref("notificar").push(objnotficarfirgoovideo);
+  elvideoanotfic="";
+  elidnamedelvideoanotific="";
+  alert("Estamos verificando el video gracias");
+
+  }
 
   // fin solo phaser
