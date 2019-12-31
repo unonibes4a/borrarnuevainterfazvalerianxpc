@@ -460,17 +460,26 @@ function creapanelvideosdelatemp(idname,idtitle,idimgurl){
 
 
 
-
+var objetoiframe="";
 https://www.facebook.com/Ctermodinamica-1282370398566788/?modal=admin_todo_tour
 function cambiapeliscula(stsrc){  // iframe le pasa la pelicula o el video elibro juego lo que sea
 
 
 detenerphaserudate();
-
+objetoiframe="";
 document.getElementById("idvisorpelis").style.display="block";
 document.getElementById("btmostrarmenu").style.display="block";
-document.getElementById("btmostrarenviavideonofunciona").style.display="block";
-document.getElementById("idiframe").src=stsrc;
+
+
+objetoiframe=document.getElementById("idiframe").src=stsrc;
+
+
+if(objetoiframe){
+  document.getElementById("btmostrarenviavideonofunciona").style.display="block";
+}
+else{
+  document.getElementById("btmostrarenviavideonofunciona").style.display="block";
+}
     
 }
 
