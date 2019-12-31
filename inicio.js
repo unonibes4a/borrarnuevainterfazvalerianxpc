@@ -90,6 +90,104 @@ $(document).ready(function(){
 
 
 
+
+// juegos
+
+var arraryjuegos2019={};
+
+
+function traejsonjuegos(){
+  
+
+       $.getJSON("juegos.json", function(result){
+        
+        arraryjuegos2019=result;
+   
+        
+      //  traejsonseries();
+
+     
+        
+      });
+}
+
+
+
+
+
+
+
+
+function elfordecrearjuegosenpanel1 () { 
+  empityelementosid("#idverdaderopeliculas");
+  for(var i in arraryjuegos2019){
+    
+    crealasjuegosenpanel(arraryjuegos2019[i].idname,
+arraryjuegos2019[i].title,arraryjuegos2019[i].img);
+      
+
+  }
+ }
+
+
+
+
+ function crealasjuegosenpanel(idname,idtitle,idimgurl){
+  stringpelis="";
+
+  
+  stringpelis=  "<div  class='column'><a id='"+ String(idname)+"'" +"  onclick='cualjuegoespora(this)'>"+
+  "<div class='card'>  <h3 class='pelih3'>"+idtitle+"<br></h3> <img  class='climgrwo' src='"+idimgurl+"'  "+"alt=''>"+
+    "<p>valerianx</p>    </div>"+"</a>  </div>";
+
+
+    
+  $("#idverdaderopeliculas").append(stringpelis);
+
+
+}
+
+
+
+
+
+
+
+
+
+var estajuego="";
+
+
+function cualjuegoespora(thiss){
+
+  
+estajuego=thiss;
+
+
+
+for(var i in arraryjuegos2019){
+
+    if(arraryjuegos2019[i].idname==estajuego.id){
+
+
+        esverdadjuego=false;
+
+
+        cambiapeliscula(arraryjuegos2019[i].pg);
+    
+    }
+}
+  }
+
+// fin de  juegos
+
+
+
+
+
+
+
+
 var arrarypeliculas2019={};
 
 
@@ -183,7 +281,7 @@ arrarypeliculas2019[i].title,arrarypeliculas2019[i].img);
          
          arraryseries2019=result;
     
-     
+         traejsonjuegos();
         
          
        });
@@ -661,7 +759,7 @@ try {
 
 graphics = game.add.graphics(vw*0.36, vh*0.27);
 
-drawShape(0x000000, 0xa21d7e);
+drawShape(0x000000, 0xFFFFFF );
 
 graphics.inputEnabled = true;
 graphics.input.useHandCursor = true;
@@ -784,7 +882,8 @@ arraysphexa[0].sprite.anchor.y=0.5;
 arraysphexa[0].sprite.inputEnabled=true;
 arraysphexa[0].sprite.input.draggable=true;
 arraysphexa[0].sprite.events.onInputDown.add(onclikhexapeliculaspeliculsa1, this);
- textpeliculas = game.add.text(game.world.centerX, game.world.centerY, "PELICULAS", { font: "10px Arial", fill: "#ff0044", align: "center" });
+ textpeliculas = game.add.text(game.world.centerX, game.world.centerY, "PELICULAS", 
+ { font: "10px Arial", fill: "#FFFFFF ", align: "center" });
 textpeliculas.anchor.setTo(0.5, 0.5);
 textpeliculas.x=arraysphexa[0].sprite.x;
 textpeliculas.y=arraysphexa[0].sprite.y;
@@ -798,7 +897,8 @@ arraysphexa[1].sprite.events.onInputDown.add(onclikhexapeliculasseries2, this);
 
 
 
- textseries = game.add.text(game.world.centerX, game.world.centerY, "SERIES", { font: "10px Arial", fill: "#ff0044", align: "center" });
+ textseries = game.add.text(game.world.centerX, game.world.centerY, "SERIES", 
+ { font: "10px Arial", fill: "#FFFFFF", align: "center" });
 textseries.anchor.setTo(0.5, 0.5);
 textseries.x=arraysphexa[1].sprite.x;
 textseries.y=arraysphexa[1].sprite.y;
@@ -814,7 +914,8 @@ arraysphexa[2].sprite.events.onInputDown.add(onclikhexajuegos3, this);
 //arraysphexa[1].sprite.visible=false;
 //arraysphexa[0].sprite.visible=false;
 
- textJUEGOS = game.add.text(game.world.centerX, game.world.centerY, "JUEGOS", { font: "10px Arial", fill: "#ff0044", align: "center" });
+ textJUEGOS = game.add.text(game.world.centerX, game.world.centerY, "JUEGOS",
+  { font: "10px Arial", fill: "#FFFFFF", align: "center" });
 textJUEGOS.anchor.setTo(0.5, 0.5);
 textJUEGOS.x=arraysphexa[2].sprite.x;
 textJUEGOS.y=arraysphexa[2].sprite.y;
@@ -880,7 +981,9 @@ function onclikhexapeliculasseries2(){
 
 function onclikhexajuegos3 () {  
 
-    
+  document.getElementById("idpaneldepeliculas").style.display="block";
+  elfordecrearjuegosenpanel1 ();
+  ffbuscarlaspeliculas();
 }
 
 
