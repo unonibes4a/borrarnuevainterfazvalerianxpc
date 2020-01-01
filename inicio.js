@@ -228,7 +228,7 @@ function elfordecrearlibrosenpanel1 () {
       arrarylibros019[i].title,arrarylibros019[i].img);
       
 
-      
+
   }
  }
 
@@ -804,6 +804,8 @@ var vh=window.innerHeight;
 //div  654  1366  2.08868501529052
 
 var sclegame=1;
+var textCURSOS;
+var texttelevision;
 
 vw=window.innerWidth*1;
 vh=window.innerHeight;
@@ -813,7 +815,7 @@ sclegame=0.000235571*(vw)+(0.028209658);
 
 var graphics;
 
-
+var textLIBROS;
 
 function nuevogame(){
 vw=window.innerWidth*1;
@@ -994,7 +996,7 @@ textpeliculas.anchor.setTo(0.5, 0.5);
 textpeliculas.x=arraysphexa[0].sprite.x;
 textpeliculas.y=arraysphexa[0].sprite.y;
 
-arraysphexa.push({id:1,sprite:creahexagonosprite(px+vw*0.16,py+vh*0.46,ps,pimg)});
+arraysphexa.push({id:1,sprite:creahexagonosprite(px+vw*0.16,py+vh*0.44,ps,pimg)});
 arraysphexa[1].sprite.anchor.x=0.5;
 arraysphexa[1].sprite.anchor.y=0.5;
 arraysphexa[1].sprite.inputEnabled=true;
@@ -1042,7 +1044,48 @@ arraysphexa[3].sprite.events.onInputDown.add(onclikhexalibros3, this);
 
 
 
+textLIBROS = game.add.text(game.world.centerX, game.world.centerY, "LIBROS",
+  { font: "10px Arial", fill: "#FFFFFF", align: "center" });
+  textLIBROS.anchor.setTo(0.5, 0.5);
+  textLIBROS.x=arraysphexa[3].sprite.x;
+  textLIBROS.y=arraysphexa[3].sprite.y;
 
+
+
+
+  
+  arraysphexa.push({id:1,sprite:creahexagonosprite(px+vw*0.84,py+vh*0.44,ps,pimg)});
+  arraysphexa[4].sprite.anchor.x=0.5;
+  arraysphexa[4].sprite.anchor.y=0.5;
+  arraysphexa[4].sprite.inputEnabled=true;
+  arraysphexa[4].sprite.input.draggable=true;
+  arraysphexa[4].sprite.events.onInputDown.add(onclikhexalibros3, this);
+  
+  
+  textCURSOS = game.add.text(game.world.centerX, game.world.centerY, "CURSOS",
+{ font: "10px Arial", fill: "#FFFFFF", align: "center" });
+textCURSOS.anchor.setTo(0.5, 0.5);
+textCURSOS.x=arraysphexa[4].sprite.x;
+textCURSOS.y=arraysphexa[4].sprite.y;
+
+  
+  
+
+
+
+arraysphexa.push({id:1,sprite:creahexagonosprite(px+vw*0.9,py+vh*0.71,ps,pimg)});
+arraysphexa[5].sprite.anchor.x=0.5;
+arraysphexa[5].sprite.anchor.y=0.5;
+arraysphexa[5].sprite.inputEnabled=true;
+arraysphexa[5].sprite.input.draggable=true;
+arraysphexa[5].sprite.events.onInputDown.add(onclikhexalibros3, this);
+
+
+texttelevision = game.add.text(game.world.centerX, game.world.centerY, "TELEVISION",
+{ font: "10px Arial", fill: "#FFFFFF", align: "center" });
+texttelevision.anchor.setTo(0.5, 0.5);
+texttelevision.x=arraysphexa[5].sprite.x;
+texttelevision.y=arraysphexa[5].sprite.y;
 
 
 
