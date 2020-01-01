@@ -283,4 +283,38 @@ display: none;
     }
 
 
+    #idcodigocursos{ 
+        position: absolute;
+        top: 25%;
+        left: 15%;
+        width: 70%;
+        height: 40%;
+        display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: space-around;
+	align-items: center;
+    align-content: center;
+    
+    z-index: 320;
+    background-color: rgba(0, 0, 0, 0.733);
 
+    border-radius: 12%;
+    display: none;
+    }
+
+    #idbtokcodigocuross
+    {background-color: rgba(50, 53, 51, 0.459);
+        width: 30px;
+        height: 30px;
+    }
+
+    #idinpucodigocursos{
+text-align: center;
+
+        border-radius: 22%;
+        width: 70%;
+        background-color: rgba(93, 93, 97, 0.404);
+
+        color: rgb(187, 141, 14);
+    }
