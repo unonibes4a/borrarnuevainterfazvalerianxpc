@@ -1059,7 +1059,7 @@ textLIBROS = game.add.text(game.world.centerX, game.world.centerY, "LIBROS",
   arraysphexa[4].sprite.anchor.y=0.5;
   arraysphexa[4].sprite.inputEnabled=true;
   arraysphexa[4].sprite.input.draggable=true;
-  arraysphexa[4].sprite.events.onInputDown.add(onclikhexalibros3, this);
+  arraysphexa[4].sprite.events.onInputDown.add(onclikhexacursos5, this);
   
   
   textCURSOS = game.add.text(game.world.centerX, game.world.centerY, "CURSOS",
@@ -1078,7 +1078,7 @@ arraysphexa[5].sprite.anchor.x=0.5;
 arraysphexa[5].sprite.anchor.y=0.5;
 arraysphexa[5].sprite.inputEnabled=true;
 arraysphexa[5].sprite.input.draggable=true;
-arraysphexa[5].sprite.events.onInputDown.add(onclikhexalibros3, this);
+arraysphexa[5].sprite.events.onInputDown.add(onclikhexacursos5, this);
 
 
 texttelevision = game.add.text(game.world.centerX, game.world.centerY, "TELEVISION",
@@ -1136,7 +1136,7 @@ function oklistophas(){
 function onclikhexapeliculaspeliculsa1(){
  
 
-    document.getElementById("idpaneldepeliculas").style.display="block";
+    document.getElementById("idpaneldepeliculas").style.display="flex";
     elfordecrearpeliculasenpanel1 ();
     ffbuscarlaspeliculas();
 
@@ -1144,7 +1144,7 @@ function onclikhexapeliculaspeliculsa1(){
 
 function onclikhexapeliculasseries2(){
 
-  document.getElementById("idpaneldepeliculas").style.display="block";
+  document.getElementById("idpaneldepeliculas").style.display="flex";
   elfordecrearseriessenpanel1 ();
   ffbuscarlaspeliculas();
    
@@ -1153,19 +1153,24 @@ function onclikhexapeliculasseries2(){
 
 function onclikhexajuegos3 () {  
 
-  document.getElementById("idpaneldepeliculas").style.display="block";
+  document.getElementById("idpaneldepeliculas").style.display="flex";
   elfordecrearjuegosenpanel1 ();
   ffbuscarlaspeliculas();
 }
 
 
 function onclikhexalibros3(){
-  document.getElementById("idpaneldepeliculas").style.display="block";
+  document.getElementById("idpaneldepeliculas").style.display="flex";
   elfordecrearlibrosenpanel1 ();
   ffbuscarlaspeliculas();
 
 }
 
+function onclikhexacursos5(){
+  document.getElementById("idcodigocursos").style.display="flex";
+
+
+}
 
 
 

@@ -40,17 +40,8 @@
     "img" : "img/libros/Calculodiferencialeintegralp.jpg",
     "pg" : "https://drive.google.com/file/d/11U66NyL05LZ-Y8F2XvBavEkpXkzDKxkq/preview?authuser=0"
     }
-,
-
-    "Calculodiferencialeintegralp" : {
-      "id" : "id2",
-    "idname" : "Calculodiferencialeintegralp",
-    "title":"Calculo diferencial e integral",
-    "img" : "img/libros/Calculodiferencialeintegralp.jpg",
-    "pg" : "https://seriemega.com/"
-    }
 
 
-
+   
 
 }
