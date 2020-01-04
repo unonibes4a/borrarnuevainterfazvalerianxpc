@@ -9,7 +9,7 @@ var yyyy = todayx.getFullYear();
 todayx = mm + '/' + dd + '/' + yyyy;
 
 $(document).ready(function(){
-   
+  cierratramensaje ();
     todoinicia();
 
 
