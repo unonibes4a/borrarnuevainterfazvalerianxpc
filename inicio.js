@@ -1449,7 +1449,9 @@ var escodigocorrectocurso="false";
     document.getElementById("idcodigocursos").style.display="none";
  
     if(escodigocorrectocurso=="nadax"){}
-    else{alert("codigo no valido " +escodigocorrectocurso);}
+    else{
+      muestramensaje("codigo no valido " +escodigocorrectocurso);
+  
   } 
   
   function fbtcodigocursoscerrar(){
