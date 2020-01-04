@@ -6,6 +6,24 @@
 
 
 
+
+
+
+
+
+  "toys4" : {
+    "vid":"1",
+      "id" : "id0-1",
+    "idname" : "toys4",
+    "title":"Toy Story 4",
+    "img" : "img/pelis/toy4.jpg",
+    "pg" : "https://share.vidyard.com/watch/2LoPUunUSMVsUHb7DkbskA?"
+    },
+
+
+
+
+
   "thinformee" : {
     "vid":"1",
       "id" : "id0-1",
