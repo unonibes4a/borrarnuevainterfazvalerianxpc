@@ -307,6 +307,7 @@ display: none;
     {background-color: rgba(50, 53, 51, 0.459);
         width: 30px;
         height: 30px;
+        color: rgb(255, 255, 255);
     }
 
     #idinpucodigocursos{
@@ -317,4 +318,26 @@ text-align: center;
         background-color: rgba(93, 93, 97, 0.404);
 
         color: rgb(187, 141, 14);
+    }
+
+
+
+
+   #iddivbotonescodigocurso {
+
+    display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-around;
+	align-items: center;
+	align-content: space-between;
+
+
+    }
+    #idbtokcodigocurosscerrar{
+        background-color: rgba(50, 53, 51, 0.459);
+        width: 30px;
+        height: 30px;
+        color: rgb(255, 255, 255);
+
     }
