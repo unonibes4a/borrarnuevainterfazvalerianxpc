@@ -1540,7 +1540,7 @@ var escodigocorrectocurso="false";
           document.getElementById("idblockokru").style.display="none";
           document.getElementById("idblockokrucentro").style.display="none";
           document.getElementById("idbtblockiframedown").style.display="none";
-          paraiframeconpdf ();
+       
         }
 
        }
