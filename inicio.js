@@ -106,6 +106,7 @@ function traejsonjuegos(){
         
      
         traejsonlibros();
+        traejsontelevision();;
      
         
       });
@@ -206,7 +207,7 @@ function traejsonlibros(){
         arrarylibros019=result;
    
         
-     
+      
 
      
         
@@ -290,6 +291,193 @@ for(var i in arrarylibros019){
 
 
 //find e juegos
+
+
+
+
+
+
+
+
+
+
+// inicio television
+
+
+
+
+var arrarytelevision019={};
+
+
+function traejsontelevision(){
+  
+
+       $.getJSON("television.json", function(result){
+        
+        arrarytelevision019=result;
+   
+        
+
+     
+        
+      });
+}
+
+
+
+
+
+
+
+
+function elfordecreartelevisionenpanel1 () { 
+  empityelementosid("#idverdaderopeliculas");
+  for(var i in arrarytelevision019){
+    
+    crealastelevisionpanel(arrarytelevision019[i].idname,
+      arrarytelevision019[i].title,arrarytelevision019[i].img);
+      
+
+
+  }
+ }
+
+
+
+
+ function crealastelevisionpanel(idname,idtitle,idimgurl){
+  stringpelis="";
+
+  
+  stringpelis=  "<div  class='column'><a id='"+ String(idname)+"'" +"  onclick='cualtelevisionpora(this)'>"+
+  "<div class='card'>  <h3 class='pelih3'>"+idtitle+"<br></h3> <img  class='climgrwo' src='"+idimgurl+"'  "+"alt=''>"+
+    "<p>valerianx</p>    </div>"+"</a>  </div>";
+
+
+    
+  $("#idverdaderopeliculas").append(stringpelis);
+
+
+}
+
+
+
+
+
+
+
+
+
+var estatele="";
+
+
+function cualtelevisionpora(thiss){
+
+  
+  estatele=thiss;
+
+
+
+
+
+
+
+var isMobile = {
+  Android: function() {
+      return navigator.userAgent.match(/Android/i);
+  },
+  BlackBerry: function() {
+      return navigator.userAgent.match(/BlackBerry/i);
+  },
+  iOS: function() {
+      return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+  },
+  Opera: function() {
+      return navigator.userAgent.match(/Opera Mini/i);
+  },
+  Windows: function() {
+      return navigator.userAgent.match(/IEMobile/i);
+  },
+  any: function() {
+      return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+  }
+};
+
+
+
+
+if(isMobile.any()) {
+  console.log('Esto es un dispositivo móvil, si especificar cuál');
+}
+if(isMobile.Android()) {
+//  console.log('Esto es un dispositivo Android');
+
+
+  alert("El modulo TV es para  PC por ahora , descarga valerian para pc  https://giovannird.itch.io/valerianx");
+}
+
+else{
+  if(isMobile.iOS()) {
+    console.log('Esto es un dispositivo iOS');
+  }
+  else{
+
+    
+for(var i in arrarytelevision019){
+
+  if(arrarytelevision019[i].idname==estatele.id){
+
+
+      esverdadjuego=false;
+
+
+      cambiapeliscula(arrarytelevision019[i].pg);
+  
+  }
+}
+
+  }
+  
+}
+if(isMobile.BlackBerry()) {
+  console.log('Esto es un dispositivo BlackBerry');
+}
+if(isMobile.iOS()) {
+  console.log('Esto es un dispositivo iOS');
+}
+if(isMobile.Opera()) {
+  console.log('Esto es un dispositivo Opera');
+}
+if(isMobile.Windows()) {
+  console.log('Esto es un dispositivo Windows');
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  }
+
+
+
+
+
+
+
+
+//find e television
 
 
 
@@ -1078,7 +1266,7 @@ arraysphexa[5].sprite.anchor.x=0.5;
 arraysphexa[5].sprite.anchor.y=0.5;
 arraysphexa[5].sprite.inputEnabled=true;
 arraysphexa[5].sprite.input.draggable=true;
-arraysphexa[5].sprite.events.onInputDown.add(onclikhexacursos5, this);
+arraysphexa[5].sprite.events.onInputDown.add(onclikhexatelevison6, this);
 
 
 texttelevision = game.add.text(game.world.centerX, game.world.centerY, "TELEVISION",
@@ -1175,6 +1363,12 @@ function onclikhexacursos5(){
 
 
 
+function onclikhexatelevison6(){
+  document.getElementById("idpaneldepeliculas").style.display="flex";
+  elfordecreartelevisionenpanel1 ();
+  ffbuscarlaspeliculas();
+
+}
 function detenerphaserudate(){
   esverdadjuego=false;
   game.paused=true;
@@ -1241,3 +1435,20 @@ function fvideonofunciona()  {
   }
 
   // fin solo phaser
+
+
+
+var escodigocorrectocurso="false";
+  function fbtcodigocursos(){
+    escodigocorrectocurso=document.getElementById("idinpucodigocursos").value;
+    document.getElementById("idcodigocursos").style.display="none";
+ 
+    if(escodigocorrectocurso=="nadax"){}
+    else{alert("codigo no valido " +escodigocorrectocurso);}
+  } 
+  
+  function fbtcodigocursoscerrar(){
+   
+    document.getElementById("idcodigocursos").style.display="none";
+ 
+  }
