@@ -412,8 +412,8 @@ if(isMobile.any()) {
 if(isMobile.Android()) {
 //  console.log('Esto es un dispositivo Android');
 
-
-  alert("El modulo TV es para  PC por ahora , descarga valerian para pc  https://giovannird.itch.io/valerianx");
+muestramensaje("El modulo TV es para  PC mientras ampliamos nuestra planta, descarga valerian para pc  https://giovannird.itch.io/valerianx");
+ 
 }
 
 else{
@@ -422,20 +422,20 @@ else{
   }
   else{
 
-    
-for(var i in arrarytelevision019){
+    for(var i in arrarytelevision019){
 
-  if(arrarytelevision019[i].idname==estatele.id){
-
-
-      esverdadjuego=false;
-
-
-      cambiapeliscula(arrarytelevision019[i].pg);
+      if(arrarytelevision019[i].idname==estatele.id){
   
+  
+          esverdadjuego=false;
+  
+  
+          cambiapeliscula(arrarytelevision019[i].pg);
+      
+      }
   }
-}
-
+  
+    
   }
   
 }
@@ -892,6 +892,7 @@ document.getElementById("btmostrarmenu").style.display="block";
 
 
 objetoiframe=document.getElementById("idiframe").src=stsrc;
+
 elvideoanotfic=stsrc;
 elidnamedelvideoanotific="id";
 
@@ -908,7 +909,9 @@ else{
 
 
 
-
+function GetDoc(x) {
+  return x.contentDocument || x.contentWindow.document;
+}
 
 
 
@@ -1300,12 +1303,12 @@ textseries.y=arraysphexa[1].sprite.y;
 function onresizemio(){
 vw=window.innerWidth*1;
 vh=window.innerHeight;
-//  sclegame= 0.5227722772277228
 
-//nuevogame();
-detenerphaserudate();
-reanudarphaserudate();
 
+//detenerphaserudate();
+//reanudarphaserudate();
+//location.reload();
+location.href = location.href;
 
 }
 
@@ -1430,7 +1433,9 @@ function fvideonofunciona()  {
 
   firebase.database().ref("notificar").push(objnotficarfirgoovideo);
   
-  alert("Estamos verificando el video gracias");
+
+
+  muestramensaje ("Estamos verificando el video gracias")
 
   }
 
@@ -1452,3 +1457,18 @@ var escodigocorrectocurso="false";
     document.getElementById("idcodigocursos").style.display="none";
  
   }
+
+
+  function muestramensaje (paramx) {
+
+    document.getElementById("idpanelmensajes").style.display="block";
+    document.getElementById("idacamensajetask").innerHTML=paramx;
+
+    }
+
+    function cierratramensaje () {
+
+      document.getElementById("idpanelmensajes").style.display="none";
+      document.getElementById("idacamensajetask").innerHTML="";
+      
+      }
