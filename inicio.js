@@ -1,6 +1,8 @@
 
 var firebaseConfig;
 var firebase;
+
+var quetiposoyyo="";
 var todayx = new Date();
 var dd = String(todayx.getDate()).padStart(2, '0');
 var mm = String(todayx.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -904,9 +906,10 @@ else{
   document.getElementById("btmostrarenviavideonofunciona").style.display="block";
 }
 
+
+deboocultatdeliframe(quetiposoyyo);
     
 }
-
 
 
 
@@ -1327,7 +1330,7 @@ function oklistophas(){
 
 
 function onclikhexapeliculaspeliculsa1(){
- 
+  quetiposoyyo="video";
 
     document.getElementById("idpaneldepeliculas").style.display="flex";
     elfordecrearpeliculasenpanel1 ();
@@ -1336,7 +1339,7 @@ function onclikhexapeliculaspeliculsa1(){
 }
 
 function onclikhexapeliculasseries2(){
-
+  quetiposoyyo="video";
   document.getElementById("idpaneldepeliculas").style.display="flex";
   elfordecrearseriessenpanel1 ();
   ffbuscarlaspeliculas();
@@ -1345,7 +1348,7 @@ function onclikhexapeliculasseries2(){
 
 
 function onclikhexajuegos3 () {  
-
+  quetiposoyyo="juego";
   document.getElementById("idpaneldepeliculas").style.display="flex";
   elfordecrearjuegosenpanel1 ();
   ffbuscarlaspeliculas();
@@ -1353,6 +1356,8 @@ function onclikhexajuegos3 () {
 
 
 function onclikhexalibros3(){
+
+  quetiposoyyo="libros";
   document.getElementById("idpaneldepeliculas").style.display="flex";
   elfordecrearlibrosenpanel1 ();
   ffbuscarlaspeliculas();
@@ -1360,6 +1365,7 @@ function onclikhexalibros3(){
 }
 
 function onclikhexacursos5(){
+
   document.getElementById("idcodigocursos").style.display="flex";
 
 
@@ -1369,6 +1375,9 @@ function onclikhexacursos5(){
 
 
 function onclikhexatelevison6(){
+
+  
+  quetiposoyyo="tele";
   document.getElementById("idpaneldepeliculas").style.display="flex";
   elfordecreartelevisionenpanel1 ();
   ffbuscarlaspeliculas();
@@ -1477,3 +1486,87 @@ var escodigocorrectocurso="false";
       document.getElementById("idacamensajetask").innerHTML="";
       
       }
+
+
+
+
+
+
+
+
+
+
+
+
+      function deboocultatdeliframe (expressionx){
+
+        switch(expressionx) {
+          case "video":
+      
+            // code block
+            paraiframeconvideo ();
+            break;
+            case "juego":
+
+         
+              paraiframeconjuego ();
+              // code block}
+
+              break;  
+            case "tele":
+
+            
+                paraiframeconjuego ();
+                // code block
+                    break;
+
+          case "libros":
+            paraiframeconpdf ();
+            
+          break;
+          default:
+            // code block
+        }
+
+      }
+
+
+
+      function paraiframeconjuego (){ 
+
+        if( document.getElementById("idvisorpelis")){
+         
+          document.getElementById("idbtblockiframetop").style.display="none";
+          document.getElementById("idblockokru").style.display="none";
+          document.getElementById("idblockokrucentro").style.display="none";
+          document.getElementById("idbtblockiframedown").style.display="none";
+        
+        }
+
+       }
+      function paraiframeconvideo (){ 
+
+if( document.getElementById("idvisorpelis")){
+  document.getElementById("idbtblockiframetop").style.display="block";
+  document.getElementById("idblockokru").style.display="block";
+  document.getElementById("idblockokrucentro").style.display="block";
+  document.getElementById("idbtblockiframedown").style.display="block";
+
+}
+
+
+       }
+      function paraiframeconpdf (){ 
+
+
+        if( document.getElementById("idvisorpelis")){
+         
+          document.getElementById("idbtblockiframetop").style.display="block";
+          document.getElementById("idblockokru").style.display="none";
+          document.getElementById("idblockokrucentro").style.display="none";
+          document.getElementById("idbtblockiframedown").style.display="none";
+        
+        }
+
+
+       }
