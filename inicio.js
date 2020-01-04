@@ -407,7 +407,8 @@ var isMobile = {
 
 
 if(isMobile.any()) {
-  console.log('Esto es un dispositivo móvil, si especificar cuál');
+
+  muestramensaje('Esto es un dispositivo móvil, si especificar cuál');
 }
 if(isMobile.Android()) {
 //  console.log('Esto es un dispositivo Android');
@@ -418,7 +419,7 @@ muestramensaje("El modulo TV es para  PC mientras ampliamos nuestra planta, desc
 
 else{
   if(isMobile.iOS()) {
-    console.log('Esto es un dispositivo iOS');
+    muestramensaje('Esto es un dispositivo iOS');
   }
   else{
 
@@ -440,16 +441,16 @@ else{
   
 }
 if(isMobile.BlackBerry()) {
-  console.log('Esto es un dispositivo BlackBerry');
+  muestramensaje('Esto es un dispositivo BlackBerry');
 }
 if(isMobile.iOS()) {
-  console.log('Esto es un dispositivo iOS');
+  muestramensaje('Esto es un dispositivo iOS');
 }
 if(isMobile.Opera()) {
-  console.log('Esto es un dispositivo Opera');
+  muestramensaje('Esto es un dispositivo Opera');
 }
 if(isMobile.Windows()) {
-  console.log('Esto es un dispositivo Windows');
+  muestramensaje('Esto es un dispositivo Windows');
 }
 
 
@@ -1044,7 +1045,8 @@ function create() {
     arraysphexa=[];
 game.stage.backgroundColor = '#000000';
 fondosp= game.add.sprite(0, 0, 'fondo');
-
+fondosp.width=vw;
+fondosp.height=vh;
 existelefiler=false;
 try {
  filter = new Phaser.Filter(game, null, game.cache.getShader('bacteria'));
@@ -1451,7 +1453,8 @@ var escodigocorrectocurso="false";
     if(escodigocorrectocurso=="nadax"){}
     else{
       muestramensaje("codigo no valido " +escodigocorrectocurso);
-  
+   
+    }
   } 
   
   function fbtcodigocursoscerrar(){
