@@ -1540,6 +1540,19 @@ var escodigocorrectocurso="false";
           document.getElementById("idblockokru").style.display="none";
           document.getElementById("idblockokrucentro").style.display="none";
           document.getElementById("idbtblockiframedown").style.display="none";
+
+
+
+
+
+
+
+
+
+
+
+
+
        
         }
 
@@ -1551,6 +1564,94 @@ if( document.getElementById("idvisorpelis")){
   document.getElementById("idblockokru").style.display="block";
   document.getElementById("idblockokrucentro").style.display="block";
   document.getElementById("idbtblockiframedown").style.display="block";
+
+
+
+
+
+  var isMobile = {
+    Android: function() {
+        return navigator.userAgent.match(/Android/i);
+    },
+    BlackBerry: function() {
+        return navigator.userAgent.match(/BlackBerry/i);
+    },
+    iOS: function() {
+        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+    },
+    Opera: function() {
+        return navigator.userAgent.match(/Opera Mini/i);
+    },
+    Windows: function() {
+        return navigator.userAgent.match(/IEMobile/i);
+    },
+    any: function() {
+        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+    }
+  };
+  
+  
+  
+  
+  if(isMobile.any()) {
+  
+    muestramensaje('Esto es un dispositivo móvil, si especificar cuál');
+  }
+  if(isMobile.Android()) {
+  //  console.log('Esto es un dispositivo Android');
+  
+  //muestramensaje("El modulo TV es para  PC mientras ampliamos nuestra planta, descarga valerian para pc  https://giovannird.itch.io/valerianx");
+  document.getElementById("idblockokru").style.display="none";
+  }
+  
+  else{
+    if(isMobile.iOS()) {
+      muestramensaje('Esto es un dispositivo iOS');
+    }
+    else{
+  
+      for(var i in arrarytelevision019){
+  
+        if(arrarytelevision019[i].idname==estatele.id){
+    
+    
+            esverdadjuego=false;
+    
+    
+            cambiapeliscula(arrarytelevision019[i].pg);
+        
+        }
+    }
+    
+      
+    }
+    
+  }
+  if(isMobile.BlackBerry()) {
+    muestramensaje('Esto es un dispositivo BlackBerry');
+  }
+  if(isMobile.iOS()) {
+    muestramensaje('Esto es un dispositivo iOS');
+  }
+  if(isMobile.Opera()) {
+    muestramensaje('Esto es un dispositivo Opera');
+  }
+  if(isMobile.Windows()) {
+    muestramensaje('Esto es un dispositivo Windows');
+  }
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
 
 }
 
