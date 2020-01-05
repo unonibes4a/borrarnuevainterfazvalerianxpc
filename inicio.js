@@ -1595,7 +1595,7 @@ if( document.getElementById("idvisorpelis")){
   
   if(isMobile.any()) {
   
-    muestramensaje('Esto es un dispositivo móvil, si especificar cuál');
+    
   }
   if(isMobile.Android()) {
   //  console.log('Esto es un dispositivo Android');
