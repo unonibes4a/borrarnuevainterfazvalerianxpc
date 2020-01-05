@@ -8,6 +8,8 @@ var dd = String(todayx.getDate()).padStart(2, '0');
 var mm = String(todayx.getMonth() + 1).padStart(2, '0'); //January is 0!
 var yyyy = todayx.getFullYear();
 
+var esverdadvisoreliculas=false;
+
 todayx = mm + '/' + dd + '/' + yyyy;
 
 $(document).ready(function(){
@@ -929,6 +931,7 @@ function GetDoc(x) {
 
 
 function fbtiramenu(){
+  esverdadvisoreliculas=false;
 try {esverdadjuego=true;
     nuevogame();
 } catch (error) {
@@ -1013,6 +1016,7 @@ var graphics;
 var textLIBROS;
 
 function nuevogame(){
+  esverdadvisoreliculas=false;
 vw=window.innerWidth*1;
 vh=window.innerHeight;
 sclegame=0.000235571*(vw)+(0.028209658);
@@ -1308,7 +1312,7 @@ textseries.y=arraysphexa[1].sprite.y;
 function onresizemio(){
 vw=window.innerWidth*1;
 vh=window.innerHeight;
-
+esverdadvisoreliculas=false;
 
 //detenerphaserudate();
 //reanudarphaserudate();
@@ -1318,6 +1322,7 @@ location.href = location.href;
 }
 
 function oklistophas(){
+  esverdadvisoreliculas=false;
  game = new Phaser.Game(vw, vh, Phaser.AUTO, 'phaser-example', {update:update,preload: preload, create: create });
 
 
@@ -1499,7 +1504,7 @@ var escodigocorrectocurso="false";
 
 
       function deboocultatdeliframe (expressionx){
-
+        esverdadvisoreliculas=true;
         switch(expressionx) {
           case "video":
       
@@ -1639,16 +1644,52 @@ if( document.getElementById("idvisorpelis")){
   if(isMobile.Windows()) {
     muestramensaje('Esto es un dispositivo Windows');
   }
+ 
+  
+  if(vw>=810&&quetiposoyyo!="juego"&& quetiposoyyo!="libros"){
+
+
+
+    document.getElementById("idblockokrucentro").style.position="absolute";
+
+    document.getElementById("idblockokrucentro").style.top=String(vh)*0.01+"px";
+  
+  setTimeout(function (param) {
+    
   
   
+  if(esverdadvisoreliculas){
   
+    document.getElementById("idblockokrucentro").style.position="absolute";
+  
+    document.getElementById("idblockokrucentro").style.top=String(vh)*0.3+"px";
+    alert("si esta visor");
+  
+  }
+  else{ alert("no esta visor");
+  
+  if(document.getElementById("idblockokrucentro").style.top==(String(vh)*0.3+"px")){
+    document.getElementById("idblockokrucentro").style.position="absolute";
+  
+    document.getElementById("idblockokrucentro").style.top=String(vh)*0.01+"px";
+  }
+  }
+  
+  
+   },5000); 
 
 
 
 
 
 
+    
+  }else{
+   
 
+  }
+
+  alert("mi pantalla es "+vw);
 
 
 
