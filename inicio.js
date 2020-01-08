@@ -1551,10 +1551,14 @@ switch(paramqueres) {
     document.getElementById("idblockokrucentro").style.display="block";
     document.getElementById("idbtblockiframedown").style.display="block";
     queeres="";
-    // code block
+    // code blockc
 }
 
-
+document.getElementById("idbtblockiframetop").style.display="none";
+document.getElementById("idblockokru").style.display="none";
+document.getElementById("idblockokrucentro").style.display="none";
+document.getElementById("idbtblockiframedown").style.display="none";
+queeres="";
 
 
         }
