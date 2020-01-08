@@ -1313,8 +1313,8 @@ vh=window.innerHeight;
 
 //detenerphaserudate();
 //reanudarphaserudate();
-//location.reload();
-location.href = location.href;
+//location.reload();ddd
+
 
 }
 
