@@ -1,14 +1,10 @@
 
 var firebaseConfig;
 var firebase;
-
-var quetiposoyyo="";
 var todayx = new Date();
 var dd = String(todayx.getDate()).padStart(2, '0');
 var mm = String(todayx.getMonth() + 1).padStart(2, '0'); //January is 0!
 var yyyy = todayx.getFullYear();
-
-var esverdadvisoreliculas=false;
 
 todayx = mm + '/' + dd + '/' + yyyy;
 
@@ -909,9 +905,12 @@ else{
 }
 
 
-deboocultatdeliframe(quetiposoyyo);
+
+iframeenjuegoopdf (queeres);
+
     
 }
+
 
 
 
@@ -931,7 +930,6 @@ function GetDoc(x) {
 
 
 function fbtiramenu(){
-  esverdadvisoreliculas=false;
 try {esverdadjuego=true;
     nuevogame();
 } catch (error) {
@@ -1016,7 +1014,6 @@ var graphics;
 var textLIBROS;
 
 function nuevogame(){
-  esverdadvisoreliculas=false;
 vw=window.innerWidth*1;
 vh=window.innerHeight;
 sclegame=0.000235571*(vw)+(0.028209658);
@@ -1312,7 +1309,7 @@ textseries.y=arraysphexa[1].sprite.y;
 function onresizemio(){
 vw=window.innerWidth*1;
 vh=window.innerHeight;
-esverdadvisoreliculas=false;
+
 
 //detenerphaserudate();
 //reanudarphaserudate();
@@ -1322,7 +1319,6 @@ location.href = location.href;
 }
 
 function oklistophas(){
-  esverdadvisoreliculas=false;
  game = new Phaser.Game(vw, vh, Phaser.AUTO, 'phaser-example', {update:update,preload: preload, create: create });
 
 
@@ -1335,8 +1331,8 @@ function oklistophas(){
 
 
 function onclikhexapeliculaspeliculsa1(){
-  quetiposoyyo="video";
-
+ 
+queeres="video";
     document.getElementById("idpaneldepeliculas").style.display="flex";
     elfordecrearpeliculasenpanel1 ();
     ffbuscarlaspeliculas();
@@ -1344,7 +1340,7 @@ function onclikhexapeliculaspeliculsa1(){
 }
 
 function onclikhexapeliculasseries2(){
-  quetiposoyyo="video";
+  queeres="video";
   document.getElementById("idpaneldepeliculas").style.display="flex";
   elfordecrearseriessenpanel1 ();
   ffbuscarlaspeliculas();
@@ -1353,7 +1349,7 @@ function onclikhexapeliculasseries2(){
 
 
 function onclikhexajuegos3 () {  
-  quetiposoyyo="juego";
+  queeres="juego";
   document.getElementById("idpaneldepeliculas").style.display="flex";
   elfordecrearjuegosenpanel1 ();
   ffbuscarlaspeliculas();
@@ -1361,8 +1357,7 @@ function onclikhexajuegos3 () {
 
 
 function onclikhexalibros3(){
-
-  quetiposoyyo="libros";
+  queeres="pdf";
   document.getElementById("idpaneldepeliculas").style.display="flex";
   elfordecrearlibrosenpanel1 ();
   ffbuscarlaspeliculas();
@@ -1370,7 +1365,7 @@ function onclikhexalibros3(){
 }
 
 function onclikhexacursos5(){
-
+  queeres="video";
   document.getElementById("idcodigocursos").style.display="flex";
 
 
@@ -1380,9 +1375,8 @@ function onclikhexacursos5(){
 
 
 function onclikhexatelevison6(){
-
-  
-  quetiposoyyo="tele";
+  alert("tel");
+  queeres="juego";
   document.getElementById("idpaneldepeliculas").style.display="flex";
   elfordecreartelevisionenpanel1 ();
   ffbuscarlaspeliculas();
@@ -1491,224 +1485,76 @@ var escodigocorrectocurso="false";
       document.getElementById("idacamensajetask").innerHTML="";
       
       }
+var queeres="";
+
+      function  iframeenjuegoopdf (paramqueres) {
 
 
 
-
-
-
-
-
-
-
-
-
-      function deboocultatdeliframe (expressionx){
-        esverdadvisoreliculas=true;
-        switch(expressionx) {
-          case "video":
-      
-            // code block
-            paraiframeconvideo ();
-            break;
-            case "juego":
-
-         
-              paraiframeconjuego ();
-              // code block}
-
-              break;  
-            case "tele":
-
-            
-                paraiframeconjuego ();
-                // code block
-                    break;
-
-          case "libros":
-            paraiframeconpdf ();
-            
-          break;
-          default:
-            // code block
-        }
-
+switch(paramqueres) {
+  case "video":
+    try {
+      if(document.getElementById("idvisorpelis")){
+     
+        document.getElementById("idbtblockiframetop").style.display="none";
+        document.getElementById("idblockokru").style.display="none";
+        document.getElementById("idblockokrucentro").style.display="none";
+        document.getElementById("idbtblockiframedown").style.display="none";
+        queeres="";
       }
-
-
-
-      function paraiframeconjuego (){ 
-
-        if( document.getElementById("idvisorpelis")){
-         
-          document.getElementById("idbtblockiframetop").style.display="none";
-          document.getElementById("idblockokru").style.display="none";
-          document.getElementById("idblockokrucentro").style.display="none";
-          document.getElementById("idbtblockiframedown").style.display="none";
-
-
-
-
-
-
-
-
-
-
-
-
-
-       
-        }
-
-       }
-      function paraiframeconvideo (){ 
-
-if( document.getElementById("idvisorpelis")){
-  document.getElementById("idbtblockiframetop").style.display="block";
-  document.getElementById("idblockokru").style.display="block";
-  document.getElementById("idblockokrucentro").style.display="block";
-  document.getElementById("idbtblockiframedown").style.display="block";
-
-
-
-
-
-  var isMobile = {
-    Android: function() {
-        return navigator.userAgent.match(/Android/i);
-    },
-    BlackBerry: function() {
-        return navigator.userAgent.match(/BlackBerry/i);
-    },
-    iOS: function() {
-        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
-    },
-    Opera: function() {
-        return navigator.userAgent.match(/Opera Mini/i);
-    },
-    Windows: function() {
-        return navigator.userAgent.match(/IEMobile/i);
-    },
-    any: function() {
-        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
-    }
-  };
-  
-  
-  
-  
-  if(isMobile.any()) {
-  
-    
-  }
-  if(isMobile.Android()) {
-  //  console.log('Esto es un dispositivo Android');
-  
-  //muestramensaje("El modulo TV es para  PC mientras ampliamos nuestra planta, descarga valerian para pc  https://giovannird.itch.io/valerianx");
-  document.getElementById("idblockokru").style.display="none";
-  }
-  
-  else{
-    if(isMobile.iOS()) {
-      muestramensaje('Esto es un dispositivo iOS');
-    }
-    else{
-  
-      for(var i in arrarytelevision019){
-  
-        if(arrarytelevision019[i].idname==estatele.id){
-    
-    
-            esverdadjuego=false;
-    
-    
-            cambiapeliscula(arrarytelevision019[i].pg);
-        
-        }
-    }
-    
-      
-    }
-    
-  }
-  if(isMobile.BlackBerry()) {
-    muestramensaje('Esto es un dispositivo BlackBerry');
-  }
-  if(isMobile.iOS()) {
-    muestramensaje('Esto es un dispositivo iOS');
-  }
-  if(isMobile.Opera()) {
-    muestramensaje('Esto es un dispositivo Opera');
-  }
-  if(isMobile.Windows()) {
-    muestramensaje('Esto es un dispositivo Windows');
-  }
- 
-  
-  if(vw>=810&&quetiposoyyo!="juego"&& quetiposoyyo!="libros"){
-
-
-
-    document.getElementById("idblockokrucentro").style.position="absolute";
-
-    document.getElementById("idblockokrucentro").style.top=String(vh)*0.01+"px";
-  
-  setTimeout(function (param) {
-    
-  
-  
-  if(esverdadvisoreliculas){
-  
-    document.getElementById("idblockokrucentro").style.position="absolute";
-  
-    document.getElementById("idblockokrucentro").style.top=String(vh)*0.3+"px";
-    alert("si esta visor");
-  
-  }
-  else{ alert("no esta visor");
-  
-  if(document.getElementById("idblockokrucentro").style.top==(String(vh)*0.3+"px")){
-    document.getElementById("idblockokrucentro").style.position="absolute";
-  
-    document.getElementById("idblockokrucentro").style.top=String(vh)*0.01+"px";
-  }
-  }
-  
-  
-   },5000); 
-
-
-
-
-
-
-    
-  }else{
    
+    } catch (error) {
+      console.log(error);
+      muestramensaje(String(error));
+    }
+ 
+    break;
+  case "juego":
+    
+  try {
+    if(document.getElementById("idvisorpelis")){
 
+      document.getElementById("idbtblockiframetop").style.display="none";
+      document.getElementById("idblockokru").style.display="none";
+      document.getElementById("idblockokrucentro").style.display="none";
+      document.getElementById("idbtblockiframedown").style.display="none";
+      queeres="";
+    }
+   
+    
+  } catch (error) {
+    
   }
-
-  alert("mi pantalla es "+vw);
-
-
-
-
+   
+  
+    break;
+  case "pdf":
+    try {
+      if(document.getElementById("idvisorpelis")){
+   
+    document.getElementById("idbtblockiframetop").style.display="block";
+    document.getElementById("idblockokru").style.display="none";
+    document.getElementById("idblockokrucentro").style.display="none";
+    document.getElementById("idbtblockiframedown").style.display="none";
+    queeres="";
+  }
+   
+    
+} catch (error) {
+  
+}
+   
+    break;
+  default:  alert(queeres);
+    document.getElementById("idbtblockiframetop").style.display="block";
+    document.getElementById("idblockokru").style.display="block";
+    document.getElementById("idblockokrucentro").style.display="block";
+    document.getElementById("idbtblockiframedown").style.display="block";
+    queeres="";
+    // code block
 }
 
 
-       }
-      function paraiframeconpdf (){ 
 
 
-        if( document.getElementById("idvisorpelis")){
-         
-          document.getElementById("idbtblockiframetop").style.display="block";
-          document.getElementById("idblockokru").style.display="none";
-          document.getElementById("idblockokrucentro").style.display="none";
-          document.getElementById("idbtblockiframedown").style.display="none";
-        
         }
-
-
-       }
